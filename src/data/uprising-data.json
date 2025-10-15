@@ -1,0 +1,449 @@
+{
+  "divisions": {
+    "dhaka": {
+      "name": "Dhaka",
+      "deaths": 477,
+      "injured": 11073,
+      "details": "Highest casualties reported in capital city during the July uprising",
+      "majorIncidents": [
+        { "date": "2024-07-16", "description": "Violent clashes in Mirpur", "casualties": 45 },
+        { "date": "2024-07-18", "description": "Police crackdown in Dhanmondi", "casualties": 32 },
+        { "date": "2024-07-20", "description": "Mass protests at Shahbag", "casualties": 28 }
+      ],
+      "ageBreakdown": {
+        "children": 12,
+        "teenagers": 89,
+        "youth": 245,
+        "adults": 131
+      }
+    },
+    "chittagong": {
+      "name": "Chittagong",
+      "deaths": 43,
+      "injured": 1738,
+      "details": "Significant violence in port city",
+      "majorIncidents": [
+        { "date": "2024-07-17", "description": "Port area confrontation", "casualties": 15 },
+        { "date": "2024-07-19", "description": "University area violence", "casualties": 12 }
+      ],
+      "ageBreakdown": {
+        "children": 1,
+        "teenagers": 8,
+        "youth": 22,
+        "adults": 12
+      }
+    },
+    "rajshahi": {
+      "name": "Rajshahi",
+      "deaths": 19,
+      "injured": 1154,
+      "details": "Northwestern region affected by widespread protests and violence",
+      "majorIncidents": [
+        { "date": "2024-07-18", "description": "City center protests", "casualties": 8 },
+        { "date": "2024-07-21", "description": "Railway station incident", "casualties": 6 }
+      ],
+      "ageBreakdown": {
+        "children": 0,
+        "teenagers": 4,
+        "youth": 10,
+        "adults": 5
+      }
+    },
+    "khulna": {
+      "name": "Khulna",
+      "deaths": 39,
+      "injured": 1546,
+      "details": "Southern region casualties during violent crackdowns",
+      "majorIncidents": [
+        { "date": "2024-07-19", "description": "Shipyard area clashes", "casualties": 12 },
+        { "date": "2024-07-22", "description": "Market district violence", "casualties": 11 }
+      ],
+      "ageBreakdown": {
+        "children": 1,
+        "teenagers": 6,
+        "youth": 20,
+        "adults": 12
+      }
+    },
+    "barishal": {
+      "name": "Barishal",
+      "deaths": 1,
+      "injured": 236,
+      "details": "Central-southern region with minimal violence compared to other divisions",
+      "majorIncidents": [
+        { "date": "2024-07-20", "description": "Minor protests with limited violence", "casualties": 1 }
+      ],
+      "ageBreakdown": {
+        "children": 0,
+        "teenagers": 0,
+        "youth": 1,
+        "adults": 0
+      }
+    },
+    "sylhet": {
+      "name": "Sylhet",
+      "deaths": 22,
+      "injured": 718,
+      "details": "Northeastern region saw significant student-led protests",
+      "majorIncidents": [
+        { "date": "2024-07-17", "description": "Tea garden area unrest", "casualties": 9 },
+        { "date": "2024-07-21", "description": "City center violence", "casualties": 7 }
+      ],
+      "ageBreakdown": {
+        "children": 1,
+        "teenagers": 5,
+        "youth": 11,
+        "adults": 5
+      }
+    },
+    "rangpur": {
+      "name": "Rangpur",
+      "deaths": 4,
+      "injured": 1205,
+      "details": "Northern region with relatively fewer casualties",
+      "majorIncidents": [
+        { "date": "2024-07-19", "description": "Agricultural area protests", "casualties": 2 },
+        { "date": "2024-07-23", "description": "Market area clashes", "casualties": 2 }
+      ],
+      "ageBreakdown": {
+        "children": 0,
+        "teenagers": 1,
+        "youth": 2,
+        "adults": 1
+      }
+    },
+    "mymensingh": {
+      "name": "Mymensingh",
+      "deaths": 17,
+      "injured": 577,
+      "details": "North-central region affected by university-led demonstrations",
+      "majorIncidents": [
+        { "date": "2024-07-18", "description": "University protests", "casualties": 7 },
+        { "date": "2024-07-22", "description": "Railway station incident", "casualties": 5 }
+      ],
+      "ageBreakdown": {
+        "children": 1,
+        "teenagers": 4,
+        "youth": 8,
+        "adults": 4
+      }
+    }
+  },
+  "divisionMapping": {
+    "Dhaka": "dhaka",
+    "Chittagong": "chittagong",
+    "Rajshahi": "rajshahi",
+    "Khulna": "khulna",
+    "Barisal": "barishal",
+    "Sylhet": "sylhet",
+    "Rangpur": "rangpur",
+    "Mymensingh": "mymensingh"
+  },
+  "divisionColors": {
+    "dhaka": "#ef4444",
+    "chittagong": "#f97316",
+    "rajshahi": "#eab308",
+    "khulna": "#22c55e",
+    "barishal": "#3b82f6",
+    "sylhet": "#8b5cf6",
+    "rangpur": "#ec4899",
+    "mymensingh": "#14b8a6"
+  },
+  "labelPositions": {
+    "dhaka": [90.4125, 23.8103],
+    "chittagong": [91.7832, 22.3569],
+    "rajshahi": [88.6025, 24.3745],
+    "khulna": [89.5590, 22.8456],
+    "barishal": [90.3333, 22.7010],
+    "sylhet": [91.8670, 24.8949],
+    "rangpur": [89.0490, 25.7439],
+    "mymensingh": [90.4100, 24.7471]
+  },
+  "statistics": {
+    "lostVisionOneEye": 382,
+    "lostVisionBothEyes": 19,
+    "toddlersAndChildren": 16,
+    "teenagers": 117
+  },
+  "timeline": [
+    { 
+      "date": "2024-06-05", 
+      "event": "High Court reinstates 30% quota for descendants of freedom fighters", 
+      "description": "The Bangladesh High Court reinstates the controversial quota system in government jobs, sparking initial discontent among students who view it as discriminatory and limiting merit-based opportunities.",
+      "casualties": 0,
+      "type": "political" 
+    },
+    { 
+      "date": "2024-07-01", 
+      "event": "Peaceful student protests begin at Dhaka University", 
+      "description": "University students initiate peaceful demonstrations demanding quota reform. The protests are organized primarily by students from Dhaka University, Jahangirnagar University, and other institutions across the country.",
+      "casualties": 0,
+      "type": "protest" 
+    },
+    { 
+      "date": "2024-07-02", 
+      "event": "Protests spread to multiple universities nationwide", 
+      "description": "The movement gains momentum as students from Rajshahi University, Chittagong University, and other campuses join. Thousands participate in coordinated demonstrations calling for merit-based government recruitment.",
+      "casualties": 0,
+      "type": "protest" 
+    },
+    { 
+      "date": "2024-07-14", 
+      "event": "Prime Minister makes controversial 'Razakar' comment", 
+      "description": "PM Sheikh Hasina makes inflammatory remarks comparing quota reform protesters to 'Razakars' (collaborators who sided with Pakistan in 1971), deeply offending protesters and escalating tensions nationwide.",
+      "casualties": 0,
+      "type": "political" 
+    },
+    { 
+      "date": "2024-07-15", 
+      "event": "First violent police crackdown at Dhaka University", 
+      "description": "Police and Bangladesh Chhatra League (student wing of ruling party) attack peaceful protesters with tear gas, rubber bullets, and batons. First casualties reported. Social media shows brutal violence against unarmed students.",
+      "casualties": 6,
+      "locations": ["Dhaka"],
+      "type": "violence" 
+    },
+    { 
+      "date": "2024-07-16", 
+      "event": "Mass arrests and internet shutdown begins", 
+      "description": "Government orders mass arrests of protest leaders and coordinators. Mobile internet services shut down across major cities. Hundreds detained without proper legal process. Communication blackout intensifies.",
+      "casualties": 12,
+      "arrests": 300,
+      "locations": ["Dhaka", "Chittagong", "Rajshahi"],
+      "type": "arrest" 
+    },
+    { 
+      "date": "2024-07-17", 
+      "event": "Violence spreads to Chittagong and Rajshahi", 
+      "description": "Armed attacks on protesters intensify in port city Chittagong and Rajshahi. Reports of live ammunition being used. Hospitals overwhelmed with injured students. Death toll rises significantly.",
+      "casualties": 23,
+      "locations": ["Chittagong", "Rajshahi"],
+      "type": "violence" 
+    },
+    { 
+      "date": "2024-07-18", 
+      "event": "Nationwide internet blackout imposed", 
+      "description": "Government imposes complete internet shutdown including broadband and mobile data. Social media platforms blocked. International communication severely disrupted. Information blackout prevents real-time reporting of atrocities.",
+      "casualties": 31,
+      "type": "media" 
+    },
+    { 
+      "date": "2024-07-19", 
+      "event": "Shoot-on-sight curfew declared", 
+      "description": "Army deployed with shoot-on-sight orders. Nationwide curfew imposed. People shot in their homes and on rooftops. Eyewitnesses report indiscriminate firing on civilians. Death toll surges dramatically.",
+      "casualties": 89,
+      "locations": ["Nationwide"],
+      "type": "violence" 
+    },
+    { 
+      "date": "2024-07-20", 
+      "event": "Deadliest day - Peak of violence", 
+      "description": "Bloodiest day of the uprising. Mass shootings in Dhaka's Mirpur, Badda, and other areas. Security forces fire directly at protesters and civilians. Hospitals report shortage of blood and medical supplies. Over 100 deaths in single day.",
+      "casualties": 127,
+      "locations": ["Dhaka", "Chittagong", "Sylhet", "Khulna"],
+      "type": "violence" 
+    },
+    { 
+      "date": "2024-07-21", 
+      "event": "Supreme Court reduces quotas to 5%", 
+      "description": "Under mounting pressure, Supreme Court reduces freedom fighter quota from 30% to 5%. However, protesters demand justice for killed students and accountability. Violence continues despite legal victory.",
+      "casualties": 18,
+      "type": "political" 
+    },
+    { 
+      "date": "2024-07-22", 
+      "event": "Mass graves and secret burials reported", 
+      "description": "Reports emerge of authorities conducting secret burials and attempting to hide actual death toll. Families unable to locate missing relatives. Human rights organizations document evidence of mass casualties being concealed.",
+      "casualties": 15,
+      "type": "violence" 
+    },
+    { 
+      "date": "2024-07-23", 
+      "event": "Partial internet restored, graphic footage emerges", 
+      "description": "Limited internet access restored. Horrific footage of killings, torture, and brutality floods social media. International community shocked by extent of violence. Calls for investigation grow louder.",
+      "casualties": 9,
+      "type": "media" 
+    },
+    { 
+      "date": "2024-07-24", 
+      "event": "International condemnation intensifies", 
+      "description": "UN Human Rights Office, Amnesty International, and Human Rights Watch condemn excessive force. Multiple countries issue statements demanding accountability. Bangladesh government denies allegations.",
+      "casualties": 7,
+      "type": "media" 
+    },
+    { 
+      "date": "2024-07-25", 
+      "event": "Students demand 9-point charter including Hasina's resignation", 
+      "description": "Movement evolves beyond quota reform. Students present 9-point demand including PM's resignation, justice for victims, and democratic reforms. 'Students Against Discrimination' emerges as key organization.",
+      "casualties": 4,
+      "type": "protest" 
+    },
+    { 
+      "date": "2024-07-26", 
+      "event": "Mass mobilization despite ban on gatherings", 
+      "description": "Defying government ban, hundreds of thousands join protests in Dhaka and nationwide. Movement gains support from diverse sections of society including workers, professionals, and civil society.",
+      "casualties": 8,
+      "type": "protest" 
+    },
+    { 
+      "date": "2024-07-27", 
+      "event": "Protesters blinded by pellet guns and rubber bullets", 
+      "description": "Increasing reports of protesters losing eyesight from pellet gun injuries. Ophthalmologists report treating hundreds of eye injuries. Many face permanent blindness. Systematic targeting of faces documented.",
+      "casualties": 11,
+      "eyeInjuries": 89,
+      "type": "violence" 
+    },
+    { 
+      "date": "2024-07-28", 
+      "event": "General strikes and hartals paralyze economy", 
+      "description": "Nationwide strikes bring economic activities to standstill. Transport, business, and services shut down. International trade through Chittagong port disrupted. Economic pressure mounts on government.",
+      "casualties": 6,
+      "type": "protest" 
+    },
+    { 
+      "date": "2024-07-29", 
+      "event": "Mass rally of over 1 million in Dhaka", 
+      "description": "Largest gathering in Bangladesh history. Over one million people flood Dhaka streets demanding Hasina's resignation. Unprecedented unity across age, class, and regional divides. Government's position weakens significantly.",
+      "casualties": 13,
+      "type": "protest" 
+    },
+    { 
+      "date": "2024-07-30", 
+      "event": "Police and RAB forces begin defecting", 
+      "description": "Reports emerge of lower-ranking police and RAB personnel refusing to fire on protesters. Some openly express support for movement. Cracks appear in regime's security apparatus.",
+      "casualties": 5,
+      "type": "political" 
+    },
+    { 
+      "date": "2024-07-31", 
+      "event": "International media gains access, exposes atrocities", 
+      "description": "Foreign journalists enter Bangladesh and document aftermath. BBC, Al Jazeera, and others broadcast evidence of systematic violence. Global pressure intensifies. Diplomatic isolation increases.",
+      "casualties": 3,
+      "type": "media" 
+    },
+    { 
+      "date": "2024-08-01", 
+      "event": "Army Chief issues veiled ultimatum to government", 
+      "description": "Army Chief makes public statement suggesting military will not fire on civilians. Interpreted as withdrawal of army support for regime. Political elite understand Hasina's days are numbered.",
+      "casualties": 2,
+      "type": "political" 
+    },
+    { 
+      "date": "2024-08-02", 
+      "event": "Cabinet members begin resigning", 
+      "description": "Several ministers and MPs resign from government positions. Ruling party faces internal dissent. Awami League leaders flee country. Hasina increasingly isolated politically.",
+      "casualties": 1,
+      "type": "political" 
+    },
+    { 
+      "date": "2024-08-03", 
+      "event": "Protesters march to Ganabhaban (PM's residence)", 
+      "description": "Massive march toward Prime Minister's official residence. Security forces do not intervene. Symbolic moment shows regime has lost control. Hasina reportedly in emergency meetings.",
+      "casualties": 4,
+      "type": "protest" 
+    },
+    { 
+      "date": "2024-08-04", 
+      "event": "Hasina agrees to step down, negotiations begin", 
+      "description": "Under immense pressure, PM agrees to resign. Backroom negotiations about safe exit. Military facilitates transition. Protesters maintain pressure to ensure she leaves.",
+      "casualties": 2,
+      "type": "political" 
+    },
+    { 
+      "date": "2024-08-05", 
+      "event": "Sheikh Hasina flees Bangladesh to India", 
+      "description": "After 15 years in power, PM Sheikh Hasina flees to India via military helicopter. Students and citizens celebrate in streets. Interim government formed. New chapter begins for Bangladesh.",
+      "casualties": 0,
+      "type": "political" 
+    },
+    { 
+      "date": "2024-08-06", 
+      "event": "Interim government led by Nobel laureate Muhammad Yunus sworn in", 
+      "description": "Dr. Muhammad Yunus takes oath as Chief Adviser of interim government. Students celebrate victory. Focus shifts to justice, accountability, and democratic reforms.",
+      "casualties": 0,
+      "type": "political" 
+    },
+    { 
+      "date": "2024-08-07", 
+      "event": "Mass celebrations across Bangladesh", 
+      "description": "Nationwide celebrations as citizens mark end of autocratic rule. Murals painted honoring martyrs. Discussions begin about prosecuting those responsible for killings. Healing process starts.",
+      "casualties": 0,
+      "type": "protest" 
+    },
+    { 
+      "date": "2024-08-08", 
+      "event": "First memorial services for martyrs held", 
+      "description": "Communities across Bangladesh hold memorial services. Families of victims demand justice. Documentation of crimes begins. International tribunals proposed for accountability.",
+      "casualties": 0,
+      "type": "memorial" 
+    },
+    { 
+      "date": "2024-08-15", 
+      "event": "Official death toll announced: 622+ killed", 
+      "description": "Interim government releases preliminary death toll of over 622, with thousands injured. Actual numbers believed to be higher. Commission formed to investigate all deaths and prosecute perpetrators.",
+      "casualties": 0,
+      "type": "political" 
+    }
+  ],
+  "context": {
+    "title": "The July 2024 Bangladesh Uprising",
+    "background": "What began as peaceful student protests against discriminatory quota systems in government jobs escalated into a nationwide movement demanding democratic reforms and accountability. The 'July Revolution' or 'Monsoon Uprising' became one of the most significant mass movements in Bangladesh's history since independence.",
+    "duration": "36 days (July 1 - August 5, 2024)",
+    "outcome": "Prime Minister Sheikh Hasina fled the country on August 5, 2024, ending 15 years of increasingly authoritarian rule. An interim government led by Nobel laureate Dr. Muhammad Yunus was established.",
+    "trigger": "The reinstatement of the 30% quota for descendants of 1971 freedom fighters in government jobs, which students viewed as discriminatory and limiting merit-based opportunities.",
+    "escalation": "Government's violent response, including live ammunition, mass arrests, internet blackouts, and inflammatory rhetoric comparing protesters to 'Razakars' (1971 war collaborators), transformed a reform movement into a demand for regime change.",
+    "significance": "The uprising demonstrated the power of youth-led movements, broke the climate of fear established over 15 years, and showed that even well-entrenched authoritarian regimes can fall when people unite.",
+    "keyDemands": [
+      "Abolition of discriminatory quota system in government jobs",
+      "Justice for all martyrs and injured victims",
+      "Prosecution of those responsible for killings and violence",
+      "Resignation of Prime Minister Sheikh Hasina",
+      "Release of all detained students and protesters",
+      "End to extrajudicial killings and enforced disappearances",
+      "Democratic reforms and free elections",
+      "Freedom of press and expression",
+      "Compensation for victims and their families"
+    ],
+    "casualties": {
+      "deaths": "622+ officially (likely much higher)",
+      "injured": "19,000+ documented",
+      "arrested": "Thousands detained",
+      "disappeared": "Unknown number missing",
+      "eyeInjuries": "401 documented cases of severe eye trauma"
+    },
+    "internationalResponse": "The uprising received widespread international attention. UN Human Rights Office, Amnesty International, Human Rights Watch, and multiple governments condemned the excessive use of force. However, neighboring India controversially provided refuge to Hasina after her ouster.",
+    "aftermath": "Dr. Muhammad Yunus-led interim government initiated reforms, investigation into killings, and preparations for democratic transition. Commissions formed to document crimes and prosecute perpetrators. Students played key role in maintaining order post-uprising.",
+    "remembrance": "July 2024 will be remembered as the month Bangladesh's youth reclaimed their future. The martyrs are honored as 'July Shaheed' (July Martyrs), and their sacrifice is credited with ending autocracy and opening path to democracy."
+  },
+  "resources": [
+    { 
+      "title": "Human Rights Watch Report", 
+      "url": "https://www.hrw.org/report/2025/01/27/after-monsoon-revolution/roadmap-lasting-security-sector-reform-bangladesh", 
+      "type": "Report" 
+    },
+    { 
+      "title": "Amnesty International Statement", 
+      "url": "https://www.amnesty.org/en/latest/news/2024/07/what-is-happening-at-the-quota-reform-protests-in-bangladesh/", 
+      "type": "Report" 
+    },
+    { 
+      "title": "UN Human Rights Office Fact-Finding Report", 
+      "url": "https://www.ohchr.org/en/documents/country-reports/ohchr-fact-finding-report-human-rights-violations-and-abuses-related", 
+      "type": "Report" 
+    },
+    { 
+      "title": "Al Jazeera Coverage", 
+      "url": "https://www.aljazeera.com/tag/bangladesh/", 
+      "type": "News" 
+    },
+    { 
+      "title": "BBC Bangladesh Crisis", 
+      "url": "https://www.bbc.com/news/topics/c8nq32jw5r7t", 
+      "type": "News" 
+    },
+    { 
+      "title": "The Guardian Analysis", 
+      "url": "https://www.theguardian.com/world/bangladesh", 
+      "type": "Analysis" 
+    }
+  ]
+}

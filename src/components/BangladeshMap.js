@@ -87,22 +87,36 @@ export default function BangladeshUprisingMap() {
   const [divisionGeography, setDivisionGeography] = useState(null);
   const [geographyError, setGeographyError] = useState(false);
 
-  // The source geography is large (~32 MB). Keep it outside the initial bundle,
-  // and avoid loading it for table/chart visitors.
+  // Request the build-generated, simplified geographic boundaries only in map view.
+  // The original source remains in src/data for reproducible regeneration.
   useEffect(() => {
     if (viewMode !== "map" || divisionGeography) return undefined;
-    let cancelled = false;
+    const controller = new AbortController();
     setGeographyError(false);
 
-    import(/* webpackChunkName: "bangladesh-geography" */ "../data/bangladesh-divisions.json")
-      .then((module) => {
-        if (!cancelled) setDivisionGeography(module.default || module);
+    fetch(`${process.env.PUBLIC_URL}/data/bangladesh-divisions.simplified.json`, {
+      signal: controller.signal
+    })
+      .then(response => {
+        if (!response.ok) throw new Error(`Map geography HTTP ${response.status}`);
+        return response.json();
       })
-      .catch(() => {
-        if (!cancelled) setGeographyError(true);
+      .then(geojson => {
+        if (!controller.signal.aborted) {
+          if (geojson.type !== "FeatureCollection" || !geojson.features?.length) {
+            throw new Error("Invalid map geography format");
+          }
+          setDivisionGeography(geojson);
+        }
+      })
+      .catch(error => {
+        if (!controller.signal.aborted) {
+          console.error("Unable to load map boundaries", error);
+          setGeographyError(true);
+        }
       });
 
-    return () => { cancelled = true; };
+    return () => controller.abort();
   }, [viewMode, divisionGeography]);
 
   const activeRegion = pinnedRegion || hoveredRegion;
@@ -970,7 +984,7 @@ export default function BangladeshUprisingMap() {
           scale: MAP_CONFIG.scale, 
           center: MAP_CONFIG.center 
         }}
-        style={{ width: "100%", height: "1000px" }}
+        style={{ width: "100%", height: "auto", maxHeight: "min(75vh, 720px)" }}
       >
         <Geographies geography={divisionGeography}>
           {renderGeographies}

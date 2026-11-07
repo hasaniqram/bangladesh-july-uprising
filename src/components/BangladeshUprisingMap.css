@@ -593,3 +593,11 @@ a:hover {
 :-moz-full-screen {
   background: #000;
 }
+
+/* React Simple Maps v5 delegates hover/focus appearance to CSS. */
+.rsm-geography:hover,
+.rsm-geography:focus-visible {
+  fill: #ffffff;
+  outline: 2px solid #fbbf24;
+  outline-offset: 1px;
+}

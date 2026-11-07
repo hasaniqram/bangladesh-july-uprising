@@ -43,7 +43,7 @@ Before publishing figures as verified historical findings:
 4. Review allegations and disputed claims using appropriately attributed, neutral wording.
 5. Avoid publishing identifiable victim profiles or graphic images without appropriate consent and rights review.
 
-The map uses a large geographic JSON dataset from `src/data/bangladesh-divisions.json` (approximately 32 MB in the repository). As of Phase 1.1, the geography is dynamically imported when the map view is requested, keeping it out of the initial JavaScript bundle. The first verified Vercel preview compiled the initial JS to 112.07 KB gzip and the separate geography chunk to 4.68 MB gzip. **The original geometry is not yet simplified**, so map loading still requires substantial download and processing. Preserve source boundaries and test rendering before replacing the geography.
+The original map geography is preserved as `src/data/bangladesh-divisions.json` (32,114,357 bytes). **Phase 1.2** generates `public/data/bangladesh-divisions.simplified.json` automatically using `node scripts/prepare-geography.cjs` during `npm start` or `npm run build`. The browser fetches this derived file only when map view is requested. In the verified CI run it shrank to **464,412 bytes (98.55% smaller)**, using 23,367 vertices instead of 312,902. The initial compiled JavaScript was **111.28 KB gzip**. Source polygons, division labels, ring winding and significant island shapes are checked during generation. Some boundaries may differ visually at zoom; compare the generated map with the source before claiming cartographic accuracy. Never hand-edit the generated file or use it as the archival source. No backend, database, or paid infrastructure is required.
 
 ## Project structure
 
@@ -52,6 +52,10 @@ The map uses a large geographic JSON dataset from `src/data/bangladesh-divisions
 - `src/data/uprising-data.json` — timeline, statistics, and division data
 - `src/data/bangladesh-divisions.json` — geographic shapes
 - `public/` — page metadata and static assets
+
+## Dependency modernization and security
+
+The existing Create React App 5 dependency tree is outdated. The November 2026 npm install audit reported **69 advisories (4 critical, 34 high, 14 moderate, 17 low)**; these are *not resolved by the map optimization*. React 19 also uses a temporary `legacy-peer-deps` compatibility setting because the installed `react-simple-maps@3` peer range stops at React 18. The next isolated upgrade should migrate to a maintained build system, adopt a React-19-compatible mapping library, regenerate the lockfile, remove `.npmrc`'s bypass, run `npm audit` and rerun end-to-end regression checks. Do not run `npm audit fix --force` without testing breaking upgrades.
 
 ## Next development priorities
 

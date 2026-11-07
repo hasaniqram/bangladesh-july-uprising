@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# Bangladesh July Uprising — Memorial Map
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive React-based memorial and historical exploration interface for the July–August 2024 uprising in Bangladesh.
 
-## Available Scripts
+## Current features
 
-In the project directory, you can run:
+- Interactive geographic map with division-level summaries
+- Search, division selection, comparison, and statistics views
+- Historical event timeline and context panels
+- English/Bangla toggle (translation coverage is still incomplete)
+- CSV export and native sharing where supported
+- Memorial and gallery interfaces (some sections currently use placeholders)
 
-### `npm start`
+## Local development
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Requirements:** Node.js and npm.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm ci
+npm start
+```
 
-### `npm test`
+Open http://localhost:3000.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Quality checks
 
-### `npm run build`
+```bash
+CI=true npm test -- --watch=false
+npm run build
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The application currently uses Create React App (`react-scripts` 5). Migration to a maintained build tool should be evaluated separately with build and browser regression testing.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Data and editorial caution
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Division-level figures and timeline descriptions are currently maintained in `src/data/uprising-data.json`. **These values are not independently verified by this repository.** They should not be treated as an authoritative casualty count, incident chronology, or a substitute for primary-source evidence.
 
-### `npm run eject`
+Before publishing figures as verified historical findings:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. Cite a traceable source for each statistic and event.
+2. Record publication date, access date, scope, methodology, and whether a value is estimated or confirmed.
+3. Distinguish regional aggregates from nationally reported totals and document possible overlap.
+4. Review allegations and disputed claims using appropriately attributed, neutral wording.
+5. Avoid publishing identifiable victim profiles or graphic images without appropriate consent and rights review.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The map imports a large geographic JSON dataset from `src/data/bangladesh-divisions.json` (approximately 32 MB in the repository). Simplification and deferred loading are priority performance improvements; the original geography should be preserved until geometry output has been reviewed.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Project structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- `src/components/BangladeshMap.js` — main interactive map interface
+- `src/components/BangladeshUprisingMap.css` — component styling
+- `src/data/uprising-data.json` — timeline, statistics, and division data
+- `src/data/bangladesh-divisions.json` — geographic shapes
+- `public/` — page metadata and static assets
 
-## Learn More
+## Next development priorities
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Replace the outdated or unverified historical claims with source-backed entries.
+2. Audit and simplify geographic geometry without losing division boundaries.
+3. Improve keyboard accessibility, mobile usability, and interactive-state handling.
+4. Complete localization and replace placeholder sections with documented content.
+5. Add data integrity checks and browser tests before production release.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Contributions should preserve memorial dignity, historical accuracy, and source transparency.

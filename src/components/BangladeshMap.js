@@ -1083,8 +1083,7 @@ const renderResources = () => (
         <p className="mt-2">Last updated: August 2024</p>
         <p className="mt-4 text-xs">
           <button onClick={() => window.print()} className="hover:underline">Print this page</button> | 
-          <a href="#" className="hover:underline ml-2">Download PDF</a> | 
-          <a href="#" className="hover:underline ml-2">Offline Version</a>
+          <button onClick={() => window.print()} className="hover:underline ml-2">Save as PDF</button>
         </p>
       </footer>
     </div>

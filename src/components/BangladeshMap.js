@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import { AlertCircle, Download, Share2, Search, X, BarChart3, Table, Info, Calendar, Users, Eye, Maximize2, Minimize2 } from "lucide-react";
-import divisionsGeo from "../data/bangladesh-divisions.json";
+// Geographic boundaries are loaded on demand to keep the initial JS bundle smaller.
 import uprisingConfig from "../data/uprising-data.json";
 import "./BangladeshUprisingMap.css";
 
@@ -84,6 +84,26 @@ export default function BangladeshUprisingMap() {
   const [condolences, setCondolences] = useState([]);
   const [newCondolence, setNewCondolence] = useState({ name: '', message: '' });
   const mapRef = useRef(null);
+  const [divisionGeography, setDivisionGeography] = useState(null);
+  const [geographyError, setGeographyError] = useState(false);
+
+  // The source geography is large (~32 MB). Keep it outside the initial bundle,
+  // and avoid loading it for table/chart visitors.
+  useEffect(() => {
+    if (viewMode !== "map" || divisionGeography) return undefined;
+    let cancelled = false;
+    setGeographyError(false);
+
+    import(/* webpackChunkName: "bangladesh-geography" */ "../data/bangladesh-divisions.json")
+      .then((module) => {
+        if (!cancelled) setDivisionGeography(module.default || module);
+      })
+      .catch(() => {
+        if (!cancelled) setGeographyError(true);
+      });
+
+    return () => { cancelled = true; };
+  }, [viewMode, divisionGeography]);
 
   const activeRegion = pinnedRegion || hoveredRegion;
 
@@ -932,6 +952,18 @@ export default function BangladeshUprisingMap() {
         {compareMode ? "Click divisions to compare" : "Hover or tap regions to see details"}
       </p>
 
+      {geographyError ? (
+        <div role="alert" className="rounded-lg border border-red-500 p-6 text-center">
+          <p>Map boundaries could not be loaded. You can still explore the data in the table.</p>
+          <button className="btn-view mx-auto mt-4" onClick={() => setViewMode("table")}>
+            Open data table
+          </button>
+        </div>
+      ) : !divisionGeography ? (
+        <div role="status" aria-live="polite" className="rounded-lg border border-gray-700 p-8 text-center">
+          Loading Bangladesh map boundaries…
+        </div>
+      ) : (
       <ComposableMap
         projection={MAP_CONFIG.projection}
         projectionConfig={{ 
@@ -940,11 +972,12 @@ export default function BangladeshUprisingMap() {
         }}
         style={{ width: "100%", height: "1000px" }}
       >
-        <Geographies geography={divisionsGeo}>
+        <Geographies geography={divisionGeography}>
           {renderGeographies}
         </Geographies>
         {renderMarkers()}
       </ComposableMap>
+      )}
 
       {renderLegend()}
       {renderTooltip()}

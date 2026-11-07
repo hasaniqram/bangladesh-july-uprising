@@ -43,7 +43,7 @@ Before publishing figures as verified historical findings:
 4. Review allegations and disputed claims using appropriately attributed, neutral wording.
 5. Avoid publishing identifiable victim profiles or graphic images without appropriate consent and rights review.
 
-The map imports a large geographic JSON dataset from `src/data/bangladesh-divisions.json` (approximately 32 MB in the repository). Simplification and deferred loading are priority performance improvements; the original geography should be preserved until geometry output has been reviewed.
+The map uses a large geographic JSON dataset from `src/data/bangladesh-divisions.json` (approximately 32 MB in the repository). As of Phase 1.1, the geography is dynamically imported when the map view is requested, keeping it out of the initial JavaScript bundle. The first verified Vercel preview compiled the initial JS to 112.07 KB gzip and the separate geography chunk to 4.68 MB gzip. **The original geometry is not yet simplified**, so map loading still requires substantial download and processing. Preserve source boundaries and test rendering before replacing the geography.
 
 ## Project structure
 

@@ -94,7 +94,7 @@ export default function BangladeshUprisingMap() {
     const controller = new AbortController();
     setGeographyError(false);
 
-    fetch(`${process.env.PUBLIC_URL}/data/bangladesh-divisions.simplified.json`, {
+    fetch(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/data/bangladesh-divisions.simplified.json`, {
       signal: controller.signal
     })
       .then(response => {
@@ -250,12 +250,6 @@ export default function BangladeshUprisingMap() {
     const topPosition = tooltipPos.y - 180 < 0 ? tooltipPos.y + 20 : tooltipPos.y - 380;
     return { left: leftPosition, top: topPosition };
   };
-
-  const getGeographyStyles = () => ({
-    default: { outline: "none", transition: "all 0.3s" },
-    hover: { outline: "none", fill: "#ffffff", cursor: "pointer", transition: "all 0.3s" },
-    pressed: { outline: "none" }
-  });
 
   const filteredDivisions = Object.entries(uprisingData).filter(([key, data]) =>
     data.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -895,7 +889,7 @@ export default function BangladeshUprisingMap() {
           onMouseMove={handleRegionMouseMove}
           onMouseLeave={handleRegionMouseLeave}
           onClick={() => handleRegionClick(regionKey)}
-          style={getGeographyStyles()}
+          style={{ outline: 'none', cursor: 'pointer', transition: 'fill 0.2s' }}
         />
       );
     })

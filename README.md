@@ -29,7 +29,7 @@ CI=true npm test -- --watch=false
 npm run build
 ```
 
-The application currently uses Create React App (`react-scripts` 5). Migration to a maintained build tool should be evaluated separately with build and browser regression testing.
+Phase 1.3 replaces the deprecated Create React App toolchain with **Vite 7**, upgrades React Simple Maps to **v5**, and uses **Vitest 4** for unit testing. The package lock was regenerated and verified with a clean `npm ci` install without `legacy-peer-deps`. The Vercel preview build completed successfully with **310 installed packages and zero npm audit vulnerabilities** at the time of verification. The frontend remains a static React application with no new paid infrastructure.
 
 ## Data and editorial caution
 
@@ -55,7 +55,7 @@ The original map geography is preserved as `src/data/bangladesh-divisions.json` 
 
 ## Dependency modernization and security
 
-The existing Create React App 5 dependency tree is outdated. The November 2026 npm install audit reported **69 advisories (4 critical, 34 high, 14 moderate, 17 low)**; these are *not resolved by the map optimization*. React 19 also uses a temporary `legacy-peer-deps` compatibility setting because the installed `react-simple-maps@3` peer range stops at React 18. The next isolated upgrade should migrate to a maintained build system, adopt a React-19-compatible mapping library, regenerate the lockfile, remove `.npmrc`'s bypass, run `npm audit` and rerun end-to-end regression checks. Do not run `npm audit fix --force` without testing breaking upgrades.
+Phase 1.3 removes `react-scripts` and the peer-compatibility bypass, upgrades React Simple Maps to React-19-compatible v5, and switches to Vite/Vitest. Run `npm audit` on the current lockfile regularly; an earlier audit of the CRA tree reported 69 advisories (4 critical), while the first refreshed Vite preview install reported **0 vulnerabilities**. Future audits can change as upstream advisories are disclosed. Follow the GitHub Actions browser smoke test before production deployment.
 
 ## Next development priorities
 

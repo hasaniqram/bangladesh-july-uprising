@@ -20,7 +20,9 @@ jobs:
         with:
           node-version: '22'
       - name: Regenerate compatible npm lockfile without lifecycle scripts
-        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+        run: |
+          rm -f package-lock.json
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
       - name: Check reproducible dependency installation
         run: npm ci --no-audit --no-fund
       - name: Run migrated unit tests

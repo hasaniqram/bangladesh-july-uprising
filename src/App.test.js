@@ -1,8 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+// Keep the application smoke test focused on wiring rather than rendering
+// the large geographic dataset in JSDOM.
+jest.mock('./components/BangladeshMap', () => function MockUprisingMap() {
+  return <main data-testid="uprising-map">Bangladesh Uprising Memorial Map</main>;
+});
+
+test('renders the uprising memorial application', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByTestId('uprising-map')).toBeInTheDocument();
+  expect(screen.getByText('Bangladesh Uprising Memorial Map')).toBeInTheDocument();
 });

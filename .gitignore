@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Generated deterministically from src/data/bangladesh-divisions.json
+/public/data/bangladesh-divisions.simplified.json

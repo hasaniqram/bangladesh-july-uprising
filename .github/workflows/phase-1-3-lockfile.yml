@@ -19,10 +19,15 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '22'
+      - name: Install current npm resolver
+        run: npm install --global npm@11
       - name: Regenerate compatible npm lockfile without lifecycle scripts
         run: |
           rm -f package-lock.json
-          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund || {
+            tail -n 110 /home/runner/.npm/_logs/*-debug-0.log | tail -n 120
+            exit 1
+          }
       - name: Check reproducible dependency installation
         run: npm ci --no-audit --no-fund
       - name: Run migrated unit tests

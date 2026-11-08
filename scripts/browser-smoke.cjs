@@ -34,6 +34,33 @@ const { chromium } = require('playwright');
     await page.getByRole('button', { name: /Map/i }).click();
     await page.locator('.rsm-geography').first().waitFor({ timeout: 30000 });
 
+    const keyboardRegions = page.locator('.rsm-geography[tabindex="0"][role="button"]');
+    if (await keyboardRegions.count() < 8) throw Error('Keyboard-accessible map regions missing');
+    await keyboardRegions.first().focus();
+    await page.keyboard.press('Enter');
+    if ((await keyboardRegions.first().getAttribute('aria-pressed')) !== 'true') {
+      throw Error('Keyboard activation did not select a geographic region');
+    }
+    await page.keyboard.press('Escape');
+
+    await page.getByRole('button', { name: 'Switch to Bengali' }).click();
+    await page.getByRole('heading', { name: 'বাংলাদেশের জুলাই ২০২৪-এর গণঅভ্যুত্থান' }).waitFor();
+    if (await page.locator('html').getAttribute('lang') !== 'bn') {
+      throw Error('Bengali document language was not applied');
+    }
+    await page.getByRole('heading', { name: 'ঐতিহাসিক তথ্যপ্রমাণ ও উপাত্তের সীমাবদ্ধতা' }).waitFor();
+    await page.getByRole('button', { name: 'ঘটনাপঞ্জি', exact: true }).click();
+    await page.getByText('প্রধান উপদেষ্টা হিসেবে মুহাম্মদ ইউনূসের শপথ').waitFor();
+    await page.getByRole('button', { name: 'ঘটনাপঞ্জি', exact: true }).click();
+    await page.getByRole('button', { name: 'সারণি', exact: true }).click();
+    await page.getByRole('heading', { name: 'বিভাগভিত্তিক তথ্যসারণি' }).waitFor();
+    await page.getByRole('button', { name: 'Switch to English' }).click();
+    if (await page.locator('html').getAttribute('lang') !== 'en') {
+      throw Error('English document language was not restored');
+    }
+    await page.getByRole('button', { name: 'Map', exact: true }).click();
+    await page.locator('.rsm-geography').first().waitFor();
+
     await page.setViewportSize({ width: 390, height: 844 });
     await page.getByRole('heading', { name: /The Monsoon Uprising/i }).waitFor();
 

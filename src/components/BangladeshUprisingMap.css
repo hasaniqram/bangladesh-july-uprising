@@ -635,3 +635,27 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Phase 1.5 map corrections: responsive, unclipped cartography and details */
+.memorial-map-svg {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+  margin-inline: auto;
+}
+.map-division-picker {
+  background: #111827;
+  color: white;
+  border: 1px solid #9ca3af;
+  border-radius: .5rem;
+  padding: .6rem .9rem;
+  min-height: 44px;
+  min-width: 12rem;
+  max-width: 100%;
+}
+.map-region-details { position: relative; z-index: 1; overflow-wrap: anywhere; }
+@media (max-width: 640px) {
+  .memorial-map-svg { min-height: 240px; }
+  .map-division-picker { width: 100%; }
+}

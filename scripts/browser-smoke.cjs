@@ -34,7 +34,55 @@ const { chromium } = require('playwright');
     await page.getByRole('button', { name: /Map/i }).click();
     await page.locator('.rsm-geography').first().waitFor({ timeout: 30000 });
 
+    // Map fix regression: a division selector and a document-flow detail panel
+    // must work without relying on pointer coordinates.
+    const mapPicker = page.getByLabel('Select division');
+    await mapPicker.selectOption('dhaka');
+    await page.locator('.map-region-details').getByRole('heading', { name: /Dhaka/i }).waitFor();
+    const detailStyle = await page.locator('.map-region-details').evaluate(element => getComputedStyle(element).position);
+    if (detailStyle === 'absolute') throw Error('Region details should not be floating over the map');
+    await mapPicker.selectOption('');
+    if (await page.locator('.map-region-details').count()) throw Error('All divisions should dismiss pinned details');
+
+    const keyboardRegions = page.locator('.rsm-geography[tabindex="0"][role="button"]');
+    if (await keyboardRegions.count() < 8) throw Error('Keyboard-accessible map regions missing');
+    await keyboardRegions.first().focus();
+    await page.keyboard.press('Enter');
+    if ((await keyboardRegions.first().getAttribute('aria-pressed')) !== 'true') {
+      throw Error('Keyboard activation did not select a geographic region');
+    }
+    await page.keyboard.press('Escape');
+
+    await page.getByRole('button', { name: 'Switch to Bengali' }).click();
+    await page.getByRole('heading', { name: 'বাংলাদেশের জুলাই ২০২৪-এর গণঅভ্যুত্থান' }).waitFor();
+    if (await page.locator('html').getAttribute('lang') !== 'bn') {
+      throw Error('Bengali document language was not applied');
+    }
+    await page.getByRole('heading', { name: 'ঐতিহাসিক তথ্যপ্রমাণ ও উপাত্তের সীমাবদ্ধতা' }).waitFor();
+    await page.getByRole('button', { name: 'ঘটনাপঞ্জি', exact: true }).click();
+    await page.getByText('প্রধান উপদেষ্টা হিসেবে মুহাম্মদ ইউনূসের শপথ').waitFor();
+    await page.getByRole('button', { name: 'ঘটনাপঞ্জি', exact: true }).click();
+    await page.getByRole('button', { name: 'সারণি', exact: true }).click();
+    await page.getByRole('heading', { name: 'বিভাগভিত্তিক তথ্যসারণি' }).waitFor();
+    await page.getByRole('button', { name: 'Switch to English' }).click();
+    if (await page.locator('html').getAttribute('lang') !== 'en') {
+      throw Error('English document language was not restored');
+    }
+    await page.getByRole('button', { name: 'Map', exact: true }).click();
+    await page.locator('.rsm-geography').first().waitFor();
+
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.getByLabel('Select division').selectOption('rangpur');
+    await page.locator('.map-region-details').getByRole('heading', { name: /Rangpur/i }).waitFor();
+    const mapBounds = await page.locator('.memorial-map-svg').boundingBox();
+    if (!mapBounds || mapBounds.width > 390 || mapBounds.width < 150) {
+      throw Error('Mobile SVG width is not responsive: ' + JSON.stringify(mapBounds));
+    }
+    const panelBounds = await page.locator('.map-region-details').boundingBox();
+    if (!panelBounds || panelBounds.x < 0 || panelBounds.x + panelBounds.width > 395) {
+      throw Error('Region details overflow the mobile viewport: ' + JSON.stringify(panelBounds));
+    }
+    await page.getByLabel('Select division').selectOption('');
     await page.getByRole('heading', { name: /The Monsoon Uprising/i }).waitFor();
 
     if (errors.length) throw Error('Browser exceptions: ' + errors.join(' | '));

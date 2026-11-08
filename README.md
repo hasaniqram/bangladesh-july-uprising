@@ -7,7 +7,7 @@ An interactive React-based memorial and historical exploration interface for the
 - Interactive geographic map with division-level summaries
 - Search, division selection, comparison, and statistics views
 - Historical event timeline and context panels
-- English/Bangla toggle (translation coverage is still incomplete)
+- English/Bengali toggle for major interface sections and sourced timeline (legacy details remain partly English)
 - CSV export and native sharing where supported
 - Memorial and gallery interfaces (some sections currently use placeholders)
 
@@ -30,6 +30,14 @@ npm run build
 ```
 
 Phase 1.3 replaces the deprecated Create React App toolchain with **Vite 7**, upgrades React Simple Maps to **v5**, and uses **Vitest 4** for unit testing. The package lock was regenerated and verified with a clean `npm ci` install without `legacy-peer-deps`. The Vercel preview build completed successfully with **310 installed packages and zero npm audit vulnerabilities** at the time of verification. The frontend remains a static React application with no new paid infrastructure.
+
+## Phase 1.5 — Bengali language and accessible interactions
+
+The page now offers an English/Bengali switch for the primary interface, selected historical chronology, data-provenance warnings, search, regional table, charts, sources and memorial text. All nine curated source-backed timeline entries have Bengali editorial translations in `src/i18n/timeline-bn.js`. Source URLs, report dates and citations remain unchanged across languages. `src/i18n/messages.js` provides the primary interface dictionary and Bengali number formatting.
+
+Keyboard users can use the skip link to reach main content and activate geographic regions with **Tab**, **Enter**, or **Space**; **Escape** clears a pinned region. Selected regions announce their name through a polite live region. Interactive elements have visible focus outlines, mobile controls have at least 44px touch-target dimensions, and motion reduces when the OS requests it.
+
+**Translation limitations:** This phase covers the most prominent public interface and sourced timeline, not every legacy details panel, gallery, profile placeholder, or chart annotation. Those secondary pieces remain partially English and need further Bengali editorial review. Neither translation nor accessible labeling validates the older uncited regional casualty data. Automated tests cover interface key alignment, translation coverage, citation preservation, keyboard activation, language switching, and map/table regression. Full manual assistive-technology testing remains necessary.
 
 ## Phase 1.4: editorial provenance
 

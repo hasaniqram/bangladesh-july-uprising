@@ -7,6 +7,8 @@ import { AlertCircle, Download, Share2, Search, X, BarChart3, Table, Info, Calen
 // Geographic boundaries are loaded on demand to keep the initial JS bundle smaller.
 import uprisingConfig from "../data/uprising-data.json";
 import historicalEvidence from "../data/historical-evidence.json";
+import { translate, formatLocalizedNumber } from "../i18n/messages";
+import { localizeEvent } from "../i18n/timeline-bn";
 import "./BangladeshUprisingMap.css";
 
 
@@ -68,7 +70,6 @@ export default function BangladeshUprisingMap() {
      =================================== */
   const [hoveredRegion, setHoveredRegion] = useState(null);
   const [pinnedRegion, setPinnedRegion] = useState(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState("map");
   const [showTimeline, setShowTimeline] = useState(false);
@@ -77,6 +78,9 @@ export default function BangladeshUprisingMap() {
   const [animatedStats, setAnimatedStats] = useState({});
   const [darkMode, setDarkMode] = useState(true);
   const [language, setLanguage] = useState("en");
+  const t = (key) => translate(language, key);
+  const number = (value) => formatLocalizedNumber(value, language);
+  const localizedTimeline = timeline.map(event => localizeEvent(event, language));
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [compareMode, setCompareMode] = useState(false);
   const [selectedDivisions, setSelectedDivisions] = useState([]);
@@ -123,6 +127,11 @@ export default function BangladeshUprisingMap() {
     return () => controller.abort();
   }, [viewMode, divisionGeography]);
 
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = language === "bn" ? "বাংলাদেশের জুলাই ২০২৪-এর গণঅভ্যুত্থান | স্মারক মানচিত্র" : "Bangladesh July 2024 Uprising | Memorial Map";
+  }, [language]);
+
   const activeRegion = pinnedRegion || hoveredRegion;
 
 
@@ -151,17 +160,8 @@ export default function BangladeshUprisingMap() {
   /* ===================================
      EVENT HANDLERS
      =================================== */
-  const handleMouseMove = (e) => setTooltipPos({ x: e.pageX, y: e.pageY });
-
-  const handleRegionMouseEnter = (regionKey, e) => {
-    if (!pinnedRegion) {
-      setHoveredRegion(regionKey);
-      handleMouseMove(e);
-    }
-  };
-
-  const handleRegionMouseMove = (e) => {
-    if (!pinnedRegion) handleMouseMove(e);
+  const handleRegionMouseEnter = (regionKey) => {
+    if (!pinnedRegion) setHoveredRegion(regionKey);
   };
 
   const handleRegionMouseLeave = () => {
@@ -249,12 +249,6 @@ export default function BangladeshUprisingMap() {
   /* ===================================
      HELPER FUNCTIONS
      =================================== */
-  const calculateTooltipPosition = () => {
-    const leftPosition = tooltipPos.x - 320 < 0 ? tooltipPos.x + 20 : tooltipPos.x - 320;
-    const topPosition = tooltipPos.y - 180 < 0 ? tooltipPos.y + 20 : tooltipPos.y - 380;
-    return { left: leftPosition, top: topPosition };
-  };
-
   const filteredDivisions = Object.entries(uprisingData).filter(([key, data]) =>
     data.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -270,9 +264,9 @@ export default function BangladeshUprisingMap() {
       <div className="flex items-center gap-3">
         <AlertCircle className="w-8 h-8 text-red-500" />
         <div>
-          <h1 className="text-3xl font-bold">The Monsoon Uprising July 2024 Bangladesh</h1>
+          <h1 className="text-3xl font-bold">{t("title")}</h1>
           <p className="text-red-400 text-sm">
-            36 Days of July: Recording the Human Cost of Hasina's Crackdown
+            {t('tagline')}
           </p>
         </div>
       </div>
@@ -280,39 +274,39 @@ export default function BangladeshUprisingMap() {
         <button 
           onClick={() => setDarkMode(!darkMode)} 
           className="btn-icon" 
-          title={darkMode ? "Light Mode" : "Dark Mode"}
+          title={darkMode ? t("light") : t("dark")} aria-label={darkMode ? t("light") : t("dark")}
         >
           {darkMode ? "☀️" : "🌙"}
         </button>
         <button 
           onClick={toggleLanguage} 
           className="btn-icon" 
-          title="Switch Language"
+          title={t("language")} aria-label={language === "en" ? "Switch to Bengali" : "Switch to English"} aria-pressed={language === "bn"}
         >
-          {language === 'en' ? 'বাং' : 'EN'}
+          {language === "en" ? "বাংলা" : "English"}
         </button>
-        <button onClick={() => setShowGallery(true)} className="btn-icon" title="Gallery">
+        <button onClick={() => setShowGallery(true)} className="btn-icon" title={language === "en" ? "Gallery" : t("gallery")} aria-label={t("gallery")}>
           🖼️
         </button>
-        <button onClick={() => setShowProfiles(true)} className="btn-icon" title="Victim Profiles">
+        <button onClick={() => setShowProfiles(true)} className="btn-icon" title={language === "en" ? "Victim Profiles" : t("profiles")} aria-label={t("profiles")}>
           👥
         </button>
-        <button onClick={() => setShowCondolences(true)} className="btn-icon" title="Condolences">
+        <button onClick={() => setShowCondolences(true)} className="btn-icon" title={language === "en" ? "Condolences" : t("condolences")} aria-label={t("condolences")}>
           💐
         </button>
-        <button onClick={() => setShowContext(!showContext)} className="btn-icon" title="Context">
+        <button onClick={() => setShowContext(!showContext)} className="btn-icon" title={language === "en" ? "Context" : t("context")} aria-label={t("context")}>
           <Info size={20} />
         </button>
-        <button onClick={() => setShowTimeline(!showTimeline)} className="btn-icon" title="Timeline">
+        <button onClick={() => setShowTimeline(!showTimeline)} className="btn-icon" title={language === "en" ? "Timeline" : t("timeline")} aria-label={t("timeline")}>
           <Calendar size={20} />
         </button>
-        <button onClick={handleExport} className="btn-icon" title="Export CSV">
+        <button onClick={handleExport} className="btn-icon" title={language === "en" ? "Export CSV" : t("export")} aria-label={t("export")}>
           <Download size={20} />
         </button>
-        <button onClick={handleShare} className="btn-icon" title="Share">
+        <button onClick={handleShare} className="btn-icon" title={language === "en" ? "Share" : t("share")} aria-label={t("share")}>
           <Share2 size={20} />
         </button>
-        <button onClick={toggleFullscreen} className="btn-icon" title="Fullscreen">
+        <button onClick={toggleFullscreen} className="btn-icon" title={language === "en" ? "Fullscreen" : t("fullscreen")} aria-label={t("fullscreen")}>
           {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
         </button>
       </div>
@@ -336,17 +330,17 @@ export default function BangladeshUprisingMap() {
         <p className="text-gray-300 mb-4">{context.background}</p>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <h3 className="font-bold text-orange-400 mb-2">Duration</h3>
+            <h3 className="font-bold text-orange-400 mb-2">{t("duration")}</h3>
             <p className="text-sm text-gray-400">{context.duration}</p>
           </div>
           <div>
-            <h3 className="font-bold text-orange-400 mb-2">Outcome</h3>
+            <h3 className="font-bold text-orange-400 mb-2">{t("outcomes")}</h3>
             <p className="text-sm text-gray-400">{context.outcome}</p>
           </div>
         </div>
         {context.keyDemands && (
           <div className="mt-4">
-            <h3 className="font-bold text-orange-400 mb-2">Key Demands</h3>
+            <h3 className="font-bold text-orange-400 mb-2">{t("keyDemands")}</h3>
             <ul className="text-sm text-gray-400 space-y-1">
               {context.keyDemands.map((demand, i) => (
                 <li key={i}>• {demand}</li>
@@ -368,15 +362,15 @@ export default function BangladeshUprisingMap() {
       <div className="timeline-panel mb-6 bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-6 max-h-[600px] overflow-y-auto">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h2 className="text-2xl font-bold text-red-400">Timeline of Events</h2>
-            <p className="text-sm text-gray-400 mt-1">Selected dated events backed by linked sources; not an exhaustive daily chronology.</p>
+            <h2 className="text-2xl font-bold text-red-400">{t("chronology")}</h2>
+            <p className="text-sm text-gray-400 mt-1">{t("chronologyNote")}</p>
           </div>
           <button onClick={() => setShowTimeline(false)} className="text-gray-400 hover:text-white">
             <X size={20} />
           </button>
         </div>
         <div className="space-y-4">
-          {timeline.map((event, i) => (
+          {localizedTimeline.map((event, i) => (
             <div key={i} className="border-l-4 pl-4 pb-4" style={{ borderColor: 
               event.type === 'violence' ? '#ef4444' :
               event.type === 'protest' ? '#3b82f6' :
@@ -407,7 +401,7 @@ export default function BangladeshUprisingMap() {
               <div className="flex flex-wrap gap-3 mb-2 text-xs">
                 {(event.sourceIds || []).map(sourceId => {
                   const source = editorialSourceById[sourceId];
-                  return source ? <a key={sourceId} href={source.url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">Source: {source.publisher}</a> : null;
+                  return source ? <a key={sourceId} href={source.url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">{t("source")}: {source.publisher}</a> : null;
                 })}
               </div>
               {event.description && (
@@ -415,7 +409,7 @@ export default function BangladeshUprisingMap() {
               )}
               {event.locations && (
                 <div className="flex gap-2 flex-wrap mt-2">
-                  <span className="text-xs text-gray-400">Locations:</span>
+                  <span className="text-xs text-gray-400">{t("locations")}</span>
                   {event.locations.map((loc, idx) => (
                     <span key={idx} className="text-xs bg-gray-800 px-2 py-1 rounded text-gray-300">
                       {loc}
@@ -622,28 +616,29 @@ export default function BangladeshUprisingMap() {
     
     return (
       <div className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-6 max-w-5xl mx-auto mb-6">
-        <h3 className="font-bold text-orange-400 mb-4">Interactive Timeline Slider</h3>
+        <h3 className="font-bold text-orange-400 mb-4">{t("timelineSlider")}</h3>
         <input
           type="range"
+          aria-label={t("sliderLabel")}
           min="0"
-          max={timeline.length - 1}
+          max={localizedTimeline.length - 1}
           value={timelineDate || 0}
           onChange={(e) => setTimelineDate(parseInt(e.target.value))}
           className="w-full mb-4"
         />
-        {timelineDate !== null && timeline[timelineDate] && (
+        {timelineDate !== null && localizedTimeline[timelineDate] && (
           <div className="bg-gray-800 rounded-lg p-4 border border-red-700">
-            <div className="text-orange-400 font-bold mb-2">{timeline[timelineDate].date}</div>
-            <div className="text-white font-bold mb-1">{timeline[timelineDate].event}</div>
-            <div className="text-gray-400 text-sm">{timeline[timelineDate].description}</div>
+            <div className="text-orange-400 font-bold mb-2">{localizedTimeline[timelineDate].date}</div>
+            <div className="text-white font-bold mb-1">{localizedTimeline[timelineDate].event}</div>
+            <div className="text-gray-400 text-sm">{localizedTimeline[timelineDate].description}</div>
             <div className="mt-3 flex flex-wrap gap-3 text-xs">
-              {(timeline[timelineDate].sourceIds || []).map(sourceId => {
+              {(localizedTimeline[timelineDate].sourceIds || []).map(sourceId => {
                 const source = editorialSourceById[sourceId];
-                return source ? <a key={sourceId} href={source.url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">Source: {source.publisher}</a> : null;
+                return source ? <a key={sourceId} href={source.url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">{t("source")}: {source.publisher}</a> : null;
               })}
             </div>
-            {timeline[timelineDate].casualties > 0 && (
-              <div className="text-red-400 text-sm mt-2">⚠ {timeline[timelineDate].casualties} casualties</div>
+            {localizedTimeline[timelineDate].casualties > 0 && (
+              <div className="text-red-400 text-sm mt-2">⚠ {localizedTimeline[timelineDate].casualties} casualties</div>
             )}
           </div>
         )}
@@ -661,7 +656,7 @@ export default function BangladeshUprisingMap() {
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
         <input
           type="text"
-          placeholder="Search divisions..."
+          placeholder={t("search")} aria-label={t("search")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-500"
@@ -669,20 +664,20 @@ export default function BangladeshUprisingMap() {
       </div>
       <div className="flex gap-2">
         <button onClick={() => setViewMode("map")} className={`btn-view ${viewMode === "map" ? "active" : ""}`}>
-          <Maximize2 size={16} /> Map
+          <Maximize2 size={16} /> {t("map")}
         </button>
         <button onClick={() => setViewMode("table")} className={`btn-view ${viewMode === "table" ? "active" : ""}`}>
-          <Table size={16} /> Table
+          <Table size={16} /> {t("table")}
         </button>
         <button onClick={() => setViewMode("chart")} className={`btn-view ${viewMode === "chart" ? "active" : ""}`}>
-          <BarChart3 size={16} /> Chart
+          <BarChart3 size={16} /> {t("chart")}
         </button>
       </div>
       <button 
         onClick={() => setCompareMode(!compareMode)} 
         className={`btn-view ${compareMode ? "active" : ""}`}
       >
-        Compare Mode {compareMode && `(${selectedDivisions.length})`}
+        {t("compare")} {compareMode && `(${selectedDivisions.length})`}
       </button>
     </div>
   );
@@ -705,8 +700,12 @@ export default function BangladeshUprisingMap() {
               </div>
               <Icon className={`text-${color}-400`} size={32} />
             </div>
-            <div className="text-xl text-gray-300">{label}</div>
-            <div className="text-sm text-gray-400 mt-2">{subtitle}</div>
+            <div className="text-xl text-gray-300">{translate(language, ({
+              "Regional deaths (unverified)": "regionalDeaths", "Regional injuries (unverified)": "regionalInjuries",
+              "Lost vision in one eye": "oneEye", "Lost vision in both eyes": "bothEyes",
+              "Toddlers and children": "children", "Teenagers": "teenagers"
+            })[label] || label)}</div>
+            <div className="text-sm text-gray-400 mt-2">{language === "bn" ? (subtitle.includes("not a national") ? t("unverifiedDeaths") : subtitle.includes("nationally verified") ? t("unverifiedInjuries") : t("legacySubtitle")) : subtitle}</div>
           </div>
         ))}
       </div>
@@ -720,7 +719,7 @@ export default function BangladeshUprisingMap() {
   const renderLegend = () => {
     if (!showLegend) return null;
     return (
-      <div className="absolute top-12 right-4 bg-black bg-opacity-90 border border-gray-700 rounded-lg p-8 z-10">
+      <div id="division-map-legend" className="mt-4 bg-black bg-opacity-90 border border-gray-700 rounded-lg p-4 md:p-6">
         <div className="flex justify-between items-center mb-8">
           <h3 className="font-bold text-sm">Division Colors</h3>
           <button onClick={() => setShowLegend(false)} className="text-gray-400 hover:text-white">
@@ -745,15 +744,15 @@ export default function BangladeshUprisingMap() {
      =================================== */
   const renderTableView = () => (
     <div className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-8 max-w-5xl mx-auto overflow-x-auto">
-      <h2 className="text-2xl font-bold mb-4">Division Data Table</h2>
+      <h2 className="text-2xl font-bold mb-4">{t("divisionTable")}</h2>
       <table className="w-full text-left">
         <thead>
           <tr className="border-b border-gray-700">
-            <th className="p-3">Division</th>
-            <th className="p-3 text-right">Deaths</th>
-            <th className="p-3 text-right">Injured</th>
-            <th className="p-3 text-right">Total</th>
-            <th className="p-3 text-right">% of Deaths</th>
+            <th className="p-3">{t("division")}</th>
+            <th className="p-3 text-right">{t("deaths")}</th>
+            <th className="p-3 text-right">{t("injured")}</th>
+            <th className="p-3 text-right">{t("total")}</th>
+            <th className="p-3 text-right">{t("percentage")}</th>
           </tr>
         </thead>
         <tbody>
@@ -789,7 +788,7 @@ export default function BangladeshUprisingMap() {
      =================================== */
   const renderChartView = () => (
     <div className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-8 max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold mb-8 text-center">Casualties by Division</h2>
+      <h2 className="text-2xl font-bold mb-8 text-center">{t("regionChart")}</h2>
       <div className="space-y-4">
         {Object.entries(uprisingData)
           .sort(([, a], [, b]) => b.deaths - a.deaths)
@@ -897,15 +896,28 @@ export default function BangladeshUprisingMap() {
         <Geography
           key={geo.rsmKey}
           geography={geo}
-          fill={adjustedColor}
+          fill={pinnedRegion === regionKey || isSelected ? "#fef3c7" : adjustedColor}
           fillOpacity={heatmapIntensity}
           stroke={isSelected ? "#ffd700" : MAP_CONFIG.strokeColor}
           strokeWidth={isSelected ? 2 : MAP_CONFIG.strokeWidth}
-          onMouseEnter={(e) => handleRegionMouseEnter(regionKey, e)}
-          onMouseMove={handleRegionMouseMove}
+          onMouseEnter={() => handleRegionMouseEnter(regionKey)}
           onMouseLeave={handleRegionMouseLeave}
           onClick={() => handleRegionClick(regionKey)}
-          style={{ outline: 'none', cursor: 'pointer', transition: 'fill 0.2s' }}
+          role="button"
+          tabIndex={0}
+          aria-label={`${divisionName}: ${t("overview")}`}
+          aria-pressed={isSelected || pinnedRegion === regionKey}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              handleRegionClick(regionKey);
+            }
+            if (event.key === "Escape") {
+              setPinnedRegion(null);
+              setHoveredRegion(null);
+            }
+          }}
+          style={{ cursor: 'pointer', transition: 'fill 0.2s' }}
         />
       );
     })
@@ -945,47 +957,57 @@ export default function BangladeshUprisingMap() {
      RENDER: MAP COMPONENT
      =================================== */
   const renderMap = () => (
-    <div ref={mapRef} className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-8 max-w-5xl mx-auto relative">
-      <div className="flex justify-between items-center mb-2 flex-wrap gap-4 relative">
-  <h2 className="text-2xl font-bold absolute left-1/2 transform -translate-x-1/2">
-    Division-Wise Impact Map
-  </h2>
-  <div className="flex items-center gap-4 ml-auto">
-    <div className="flex items-center gap-2">
-      <label className="text-sm text-gray-400">Heat Intensity:</label>
-      <input 
-        type="range" 
-        min="0.3" 
-        max="1.5" 
-        step="0.1" 
-        value={heatmapIntensity}
-        onChange={(e) => setHeatmapIntensity(parseFloat(e.target.value))}
-        className="w-24"
-      />
-      <span className="text-xs text-gray-400">{(heatmapIntensity * 100).toFixed(0)}%</span>
-    </div>
-    {!showLegend && (
-      <button onClick={() => setShowLegend(true)} className="text-sm text-gray-400 hover:text-white">
-        Show Legend
-      </button>
-    )}
-  </div>
-</div>
-
+    <section ref={mapRef} aria-labelledby="map-heading" className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-4 md:p-8 max-w-5xl mx-auto relative">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+        <h2 className="text-xl md:text-2xl font-bold" id="map-heading">
+          {language === "bn" ? "বিভাগভিত্তিক প্রভাবের মানচিত্র" : "Division-Wise Impact Map"}
+        </h2>
+        <div className="flex items-center flex-wrap gap-3">
+          <label htmlFor="map-intensity" className="text-sm text-gray-300">
+            {language === "bn" ? "রঙের ঘনত্ব" : "Heat intensity"}
+          </label>
+          <input id="map-intensity" type="range" min="0.3" max="1.5" step="0.1"
+            value={heatmapIntensity} onChange={(event) => setHeatmapIntensity(Number(event.target.value))}
+            className="w-24" />
+          <span className="text-xs text-gray-300">{(heatmapIntensity * 100).toFixed(0)}%</span>
+          <button type="button" className="btn-view"
+            onClick={() => setShowLegend(value => !value)}
+            aria-expanded={showLegend} aria-controls="division-map-legend">
+            {language === "bn" ? (showLegend ? "রং নির্দেশিকা লুকান" : "রং নির্দেশিকা দেখুন") : (showLegend ? "Hide legend" : "Show legend")}
+          </button>
+        </div>
+      </div>
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <label htmlFor="map-division-picker" className="text-sm font-medium">
+          {language === "bn" ? "বিভাগ নির্বাচন করুন" : "Select division"}
+        </label>
+        <select id="map-division-picker" className="map-division-picker"
+          value={pinnedRegion || ""} onChange={(event) => {
+            setPinnedRegion(event.target.value || null);
+            setHoveredRegion(null);
+          }}>
+          <option value="">{language === "bn" ? "সব বিভাগ" : "All divisions"}</option>
+          {Object.entries(uprisingData).map(([key, value]) => (
+            <option key={key} value={key}>{value.name}</option>
+          ))}
+        </select>
+      </div>
       <p className="text-gray-400 text-center mb-8">
-        {compareMode ? "Click divisions to compare" : "Hover or tap regions to see details"}
+        {language === "bn"
+          ? (compareMode ? "তুলনা করতে বিভাগ নির্বাচন করুন" : "বিস্তারিত জানতে বিভাগের ওপর কার্সর রাখুন, স্পর্শ করুন অথবা Tab ও Enter ব্যবহার করুন")
+          : (compareMode ? "Click or press Enter on divisions to compare" : "Hover, tap, or use Tab and Enter to explore regions")}
       </p>
 
       {geographyError ? (
         <div role="alert" className="rounded-lg border border-red-500 p-6 text-center">
-          <p>Map boundaries could not be loaded. You can still explore the data in the table.</p>
+          <p>{t("mapError")} {t("tableFallback")}</p>
           <button className="btn-view mx-auto mt-4" onClick={() => setViewMode("table")}>
-            Open data table
+            {t("divisionTable")}
           </button>
         </div>
       ) : !divisionGeography ? (
         <div role="status" aria-live="polite" className="rounded-lg border border-gray-700 p-8 text-center">
-          Loading Bangladesh map boundaries…
+          {t("unknownRegions")}
         </div>
       ) : (
       <ComposableMap
@@ -994,7 +1016,8 @@ export default function BangladeshUprisingMap() {
           scale: MAP_CONFIG.scale, 
           center: MAP_CONFIG.center 
         }}
-        style={{ width: "100%", height: "auto", maxHeight: "min(75vh, 720px)" }}
+        className="memorial-map-svg"
+        style={{ width: "100%", height: "auto" }}
       >
         <Geographies geography={divisionGeography}>
           {renderGeographies}
@@ -1003,65 +1026,40 @@ export default function BangladeshUprisingMap() {
       </ComposableMap>
       )}
 
+      <p className="sr-only" role="status" aria-live="polite">{pinnedRegion ? `${t("regionSelected")} ${uprisingData[pinnedRegion]?.name || ""}` : ""}</p>
       {renderLegend()}
       {renderTooltip()}
-    </div>
+    </section>
   );
 
 
   /* ===================================
      RENDER: TOOLTIP COMPONENT
      =================================== */
+  // Region details live below the map rather than at page mouse coordinates.
+  // This prevents overflow/off-screen content on touch devices and keyboard focus.
   const renderTooltip = () => {
     if (!activeRegion || compareMode) return null;
-
-    const tooltipPosition = calculateTooltipPosition();
     const data = uprisingData[activeRegion];
-
+    if (!data) return null;
     return (
-      <div
-        className="absolute bg-black bg-opacity-95 border-2 border-red-600 rounded-lg p-4 pointer-events-none z-20 min-w-64 shadow-2xl transition-all duration-100 ease-out transform opacity-100 scale-100 tooltip-container"
-        style={tooltipPosition}
-      >
-        {pinnedRegion && (
-          <button
-            className="absolute top-1 right-2 text-gray-400 hover:text-white text-xs pointer-events-auto"
-            onClick={handleTooltipClose}
-          >
-            ✕
-          </button>
-        )}
-        <h3 className="text-xl font-bold text-red-400 mb-2">
-          {data.name} Division
-        </h3>
-        <div className="space-y-1 text-sm">
-          <div className="flex justify-between gap-8">
-            <span className="text-gray-400">Deaths:</span>
-            <span className="text-red-400 font-bold text-lg">{data.deaths}</span>
-          </div>
-          <div className="flex justify-between gap-8">
-            <span className="text-gray-400">Injured:</span>
-            <span className="text-orange-400 font-bold text-lg">{data.injured}</span>
-          </div>
-          <div className="flex justify-between gap-8">
-            <span className="text-gray-400">% of Total Deaths:</span>
-            <span className="text-gray-300 font-bold">{getPercentage(data.deaths)}%</span>
-          </div>
-          <p className="text-gray-300 text-xs mt-2 pt-2 border-t border-gray-700">
-            {data.details}
-          </p>
-          {data.majorIncidents && data.majorIncidents.length > 0 && (
-            <div className="mt-3 pt-2 border-t border-gray-700">
-              <div className="text-gray-400 text-xs font-bold mb-1">Major Incidents:</div>
-              {data.majorIncidents.slice(0, 2).map((incident, i) => (
-                <div key={i} className="text-xs text-gray-400 mb-1">
-                  • {incident.date}: {incident.description}
-                </div>
-              ))}
-            </div>
+      <section className="map-region-details mt-4 bg-gray-950 border border-red-700 rounded-lg p-4 md:p-5"
+        aria-label={`${data.name} ${t("overview")}`}>
+        <div className="flex items-start justify-between gap-4">
+          <h3 className="text-xl font-bold text-red-300">{data.name} {t("division")}</h3>
+          {pinnedRegion && (
+            <button type="button" className="btn-view" onClick={handleTooltipClose} aria-label={t("close")}>
+              <X size={16} aria-hidden="true" /> {t("close")}
+            </button>
           )}
         </div>
-      </div>
+        <p className="text-xs text-amber-200 mt-1 mb-3">{t("unverified")} {t("legacyWarning")}</p>
+        <dl className="grid grid-cols-2 gap-3 text-sm">
+          <div><dt className="text-gray-300">{t("deaths")}</dt><dd className="text-red-300 font-bold">{number(data.deaths)}</dd></div>
+          <div><dt className="text-gray-300">{t("injured")}</dt><dd className="text-orange-300 font-bold">{number(data.injured)}</dd></div>
+        </dl>
+        {language === "en" && data.details && <p className="text-gray-300 text-sm mt-4">{data.details}</p>}
+      </section>
     );
   };
 
@@ -1070,21 +1068,18 @@ export default function BangladeshUprisingMap() {
      =================================== */
   const renderEvidenceNotice = () => (
     <section className="max-w-5xl mx-auto mb-8 rounded-xl border border-amber-500/50 bg-gray-900/85 p-5 md:p-6" aria-labelledby="evidence-heading">
-      <h2 id="evidence-heading" className="text-xl font-bold text-amber-200 mb-3">
-        Historical evidence and data limitations
-      </h2>
+      <h2 id="evidence-heading" className="text-xl font-bold text-amber-200 mb-3">{t("evidenceTitle")}</h2>
       <p className="text-sm text-gray-200 mb-3">
-        <strong>{historicalEvidence.nationalAssessment.qualifier} {historicalEvidence.nationalAssessment.value.toLocaleString("en-US")}</strong> people may have been killed during {historicalEvidence.nationalAssessment.period},
-        according to the UN Human Rights Office's 2025 fact-finding report. This is a <strong>national estimate</strong>, not a confirmed roll of named victims.
-        {" "}<a href={editorialSourceById["ohchr-2025"].url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">Read the OHCHR report</a>.
+        <strong>{t("upTo")} {number(historicalEvidence.nationalAssessment.value)}</strong> {t("peopleMayHaveDied")} {historicalEvidence.nationalAssessment.period}. {t("reportAttribution")} {t("estimateCaution")}
+        {" "}<a href={editorialSourceById["ohchr-2025"].url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">{t("readOhchr")}</a>.
       </p>
       <p className="text-sm text-amber-100">
-        <strong>Unverified regional figures:</strong> {historicalEvidence.regionalAssessment.note}
-        The division figures and eye-injury cards below must not be combined with the OHCHR estimate.
+        <strong>{t("unverified")}</strong> {language === "bn"
+          ? "এই সাইটের পুরোনো বিভাগভিত্তিক নিহত, আহত ও চোখে আঘাতের পরিসংখ্যানের উৎস বা পদ্ধতি যাচাই করা যায়নি। এগুলো নির্ভরযোগ্য জাতীয় হিসাব নয়।"
+          : historicalEvidence.regionalAssessment.note}
+        {" "}{t("legacyWarning")}
       </p>
-      <p className="text-xs text-gray-400 mt-3">
-        Source review: {historicalEvidence.reviewedOn}. The sourced chronology uses linked references; older uncited daily casualty figures are excluded.
-      </p>
+      <p className="text-xs text-gray-400 mt-3">{t("sourceReview")} {historicalEvidence.reviewedOn}. {t("olderExcluded")}</p>
     </section>
   );
 
@@ -1093,8 +1088,8 @@ export default function BangladeshUprisingMap() {
      =================================== */
 const renderResources = () => (
   <div className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-8 max-w-5xl mx-auto mt-12">
-    <h2 className="text-2xl font-bold mb-4 text-red-400">Sources & Further Reading</h2>
-    <p className="text-sm text-gray-300 mb-4">Sources below support the selected chronology and national estimate. Other historical reading is listed separately.</p>
+    <h2 className="text-2xl font-bold mb-4 text-red-400">{t("resources")}</h2>
+    <p className="text-sm text-gray-300 mb-4">{t("resourcesNote")}</p>
     <div className="grid md:grid-cols-2 gap-4 mb-6">
       {editorialSources.map(source => (
         <a key={source.id} href={source.url} target="_blank" rel="noopener noreferrer" className="block p-4 border border-amber-700/60 rounded-lg hover:border-amber-400 transition-colors">
@@ -1104,7 +1099,7 @@ const renderResources = () => (
         </a>
       ))}
     </div>
-    <h3 className="font-semibold text-gray-200 mb-3">Additional reading (not citations for every legacy figure)</h3>
+    <h3 className="font-semibold text-gray-200 mb-3">{t("additionalReading")}</h3>
     <div className="grid md:grid-cols-3 gap-4">
       {resources.map((resource, i) => (
         <a
@@ -1134,9 +1129,9 @@ const renderResources = () => (
           <div key={i} className="candle-flame mx-2"></div>
         ))}
       </div>
-      <h2 className="text-3xl font-bold mb-2">In Memory</h2>
+      <h2 className="text-3xl font-bold mb-2">{t("memorial")}</h2>
       <p className="text-gray-300 text-lg mb-4">
-        We remember those who were killed, injured, and otherwise affected. The verified national toll remains an estimate; regional counts on this site are unverified.
+        {t("memorialText")}
       </p>
       <p className="text-gray-400 text-sm italic">
         "The arc of the moral universe is long, but it bends toward justice."
@@ -1150,7 +1145,9 @@ const renderResources = () => (
      =================================== */
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-red-900 via-gray-900 to-black' : 'bg-gradient-to-br from-gray-100 via-white to-gray-200'} ${darkMode ? 'text-white' : 'text-gray-900'} p-8 relative`}>
+      <a href="#main-content" className="skip-link">{t("skip")}</a>
       {renderHeader()}
+      <main id="main-content" tabIndex={-1}>
       {renderEvidenceNotice()}
       {renderContext()}
       {renderTimeline()}
@@ -1169,13 +1166,14 @@ const renderResources = () => (
       {renderGallery()}
       {renderProfiles()}
       {renderCondolences()}
+      </main>
 
       <footer className={`text-center ${darkMode ? 'text-gray-500' : 'text-gray-600'} text-sm mt-12`}>
-        <p>Source-backed timeline and national estimate reviewed {historicalEvidence.reviewedOn}. Regional statistics are unverified archival data.</p>
-        <p className="mt-2">Source methodology and known limitations are documented in the project README.</p>
+        <p>{t("sourceFooter")} {historicalEvidence.reviewedOn}. {t("footerWarning")}</p>
+        <p className="mt-2">{t("footerMethod")}</p>
         <p className="mt-4 text-xs">
-          <button onClick={() => window.print()} className="hover:underline">Print this page</button> | 
-          <button onClick={() => window.print()} className="hover:underline ml-2">Save as PDF</button>
+          <button onClick={() => window.print()} className="hover:underline">{t("print")}</button> | 
+          <button onClick={() => window.print()} className="hover:underline ml-2">{t("savePdf")}</button>
         </p>
       </footer>
     </div>

@@ -719,7 +719,7 @@ export default function BangladeshUprisingMap() {
   const renderLegend = () => {
     if (!showLegend) return null;
     return (
-      <div className="absolute top-12 right-4 bg-black bg-opacity-90 border border-gray-700 rounded-lg p-8 z-10">
+      <div id="division-map-legend" className="mt-4 bg-black bg-opacity-90 border border-gray-700 rounded-lg p-4 md:p-6">
         <div className="flex justify-between items-center mb-8">
           <h3 className="font-bold text-sm">Division Colors</h3>
           <button onClick={() => setShowLegend(false)} className="text-gray-400 hover:text-white">

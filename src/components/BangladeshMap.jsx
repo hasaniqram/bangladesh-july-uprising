@@ -6,6 +6,7 @@ import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps
 import { AlertCircle, Download, Share2, Search, X, BarChart3, Table, Info, Calendar, Users, Eye, Maximize2, Minimize2 } from "lucide-react";
 // Geographic boundaries are loaded on demand to keep the initial JS bundle smaller.
 import uprisingConfig from "../data/uprising-data.json";
+import historicalEvidence from "../data/historical-evidence.json";
 import "./BangladeshUprisingMap.css";
 
 
@@ -17,9 +18,12 @@ const divisionMapping = uprisingConfig.divisionMapping;
 const divisionColors = uprisingConfig.divisionColors;
 const labelPositions = uprisingConfig.labelPositions;
 const statistics = uprisingConfig.statistics;
-const timeline = uprisingConfig.timeline || [];
+// Phase 1.4: show the independently cited editorial timeline, not unsupported daily counts.
+const timeline = historicalEvidence.timeline;
 const context = uprisingConfig.context || {};
 const resources = uprisingConfig.resources || [];
+const editorialSources = historicalEvidence.sources;
+const editorialSourceById = Object.fromEntries(editorialSources.map(source => [source.id, source]));
 
 
 /* ===================================
@@ -33,12 +37,12 @@ const totalInjured = Object.values(uprisingData).reduce((sum, r) => sum + r.inju
    STATISTICS CONFIGURATION
    =================================== */
 const statisticsConfig = [
-  { label: "Lives Lost", value: totalDeaths, color: "red", subtitle: "Killed by fascist regime", icon: AlertCircle },
-  { label: "Injured", value: totalInjured, color: "orange", subtitle: "Victims of state violence", icon: Users },
-  { label: "Lost vision in one eye", value: statistics.lostVisionOneEye, color: "pink", subtitle: "Partial Blindness", icon: Eye },
-  { label: "Lost vision in both eyes", value: statistics.lostVisionBothEyes, color: "yellow", subtitle: "Total Blindness", icon: Eye },
-  { label: "Toddlers and children", value: statistics.toddlersAndChildren, color: "green", subtitle: "Ages 0–10 Years", icon: Users },
-  { label: "Teenagers", value: statistics.teenagers, color: "blue", subtitle: "Ages 10–18 years", icon: Users }
+  { label: "Regional deaths (unverified)", value: totalDeaths, color: "red", subtitle: "Uncited legacy data — not a national total", icon: AlertCircle },
+  { label: "Regional injuries (unverified)", value: totalInjured, color: "orange", subtitle: "Uncited legacy data — not nationally verified", icon: Users },
+  { label: "Lost vision in one eye", value: statistics.lostVisionOneEye, color: "pink", subtitle: "Unverified legacy site count", icon: Eye },
+  { label: "Lost vision in both eyes", value: statistics.lostVisionBothEyes, color: "yellow", subtitle: "Unverified legacy site count", icon: Eye },
+  { label: "Toddlers and children", value: statistics.toddlersAndChildren, color: "green", subtitle: "Unverified legacy site count (ages 0–10)", icon: Users },
+  { label: "Teenagers", value: statistics.teenagers, color: "blue", subtitle: "Unverified legacy site count (ages 10–18)", icon: Users }
 ];
 
 
@@ -184,7 +188,7 @@ export default function BangladeshUprisingMap() {
 
   const handleExport = () => {
     const csvContent = [
-      ["Division", "Deaths", "Injured", "Total Casualties"],
+      ["Division (UNVERIFIED LEGACY DATA)", "Deaths (unverified)", "Injured (unverified)", "Total (unverified)"],
       ...Object.entries(uprisingData).map(([key, data]) => [
         data.name,
         data.deaths,
@@ -197,14 +201,14 @@ export default function BangladeshUprisingMap() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "bangladesh-uprising-data.csv";
+    a.download = "bangladesh-uprising-unverified-regional-data.csv";
     a.click();
   };
 
   const handleShare = async () => {
     const shareData = {
       title: "The Monsoon Uprising",
-      text: `${totalDeaths} lives lost, ${totalInjured} injured in the Bangladesh uprising. Never forget.`,
+      text: "Remembering those affected by the July–August 2024 uprising. Review sourced national estimates and the limitations of regional figures.",
       url: window.location.href
     };
     try {
@@ -365,7 +369,7 @@ export default function BangladeshUprisingMap() {
         <div className="flex justify-between items-start mb-4">
           <div>
             <h2 className="text-2xl font-bold text-red-400">Timeline of Events</h2>
-            <p className="text-sm text-gray-400 mt-1">Detailed chronology of the July 2024 uprising</p>
+            <p className="text-sm text-gray-400 mt-1">Selected dated events backed by linked sources; not an exhaustive daily chronology.</p>
           </div>
           <button onClick={() => setShowTimeline(false)} className="text-gray-400 hover:text-white">
             <X size={20} />
@@ -400,6 +404,12 @@ export default function BangladeshUprisingMap() {
                 )}
               </div>
               <h3 className="text-white font-bold mb-2">{event.event}</h3>
+              <div className="flex flex-wrap gap-3 mb-2 text-xs">
+                {(event.sourceIds || []).map(sourceId => {
+                  const source = editorialSourceById[sourceId];
+                  return source ? <a key={sourceId} href={source.url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">Source: {source.publisher}</a> : null;
+                })}
+              </div>
               {event.description && (
                 <p className="text-gray-300 text-sm mb-2">{event.description}</p>
               )}
@@ -626,6 +636,12 @@ export default function BangladeshUprisingMap() {
             <div className="text-orange-400 font-bold mb-2">{timeline[timelineDate].date}</div>
             <div className="text-white font-bold mb-1">{timeline[timelineDate].event}</div>
             <div className="text-gray-400 text-sm">{timeline[timelineDate].description}</div>
+            <div className="mt-3 flex flex-wrap gap-3 text-xs">
+              {(timeline[timelineDate].sourceIds || []).map(sourceId => {
+                const source = editorialSourceById[sourceId];
+                return source ? <a key={sourceId} href={source.url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">Source: {source.publisher}</a> : null;
+              })}
+            </div>
             {timeline[timelineDate].casualties > 0 && (
               <div className="text-red-400 text-sm mt-2">⚠ {timeline[timelineDate].casualties} casualties</div>
             )}
@@ -1050,11 +1066,45 @@ export default function BangladeshUprisingMap() {
   };
 
   /* ===================================
+     RENDER: EDITORIAL EVIDENCE AND LIMITATIONS
+     =================================== */
+  const renderEvidenceNotice = () => (
+    <section className="max-w-5xl mx-auto mb-8 rounded-xl border border-amber-500/50 bg-gray-900/85 p-5 md:p-6" aria-labelledby="evidence-heading">
+      <h2 id="evidence-heading" className="text-xl font-bold text-amber-200 mb-3">
+        Historical evidence and data limitations
+      </h2>
+      <p className="text-sm text-gray-200 mb-3">
+        <strong>{historicalEvidence.nationalAssessment.qualifier} {historicalEvidence.nationalAssessment.value.toLocaleString("en-US")}</strong> people may have been killed during {historicalEvidence.nationalAssessment.period},
+        according to the UN Human Rights Office's 2025 fact-finding report. This is a <strong>national estimate</strong>, not a confirmed roll of named victims.
+        {" "}<a href={editorialSourceById["ohchr-2025"].url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">Read the OHCHR report</a>.
+      </p>
+      <p className="text-sm text-amber-100">
+        <strong>Unverified regional figures:</strong> {historicalEvidence.regionalAssessment.note}
+        The division figures and eye-injury cards below must not be combined with the OHCHR estimate.
+      </p>
+      <p className="text-xs text-gray-400 mt-3">
+        Source review: {historicalEvidence.reviewedOn}. The sourced chronology uses linked references; older uncited daily casualty figures are excluded.
+      </p>
+    </section>
+  );
+
+  /* ===================================
      RENDER: RESOURCES SECTION
      =================================== */
 const renderResources = () => (
   <div className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-8 max-w-5xl mx-auto mt-12">
-    <h2 className="text-2xl font-bold mb-4 text-red-400">Resources & Further Reading</h2>
+    <h2 className="text-2xl font-bold mb-4 text-red-400">Sources & Further Reading</h2>
+    <p className="text-sm text-gray-300 mb-4">Sources below support the selected chronology and national estimate. Other historical reading is listed separately.</p>
+    <div className="grid md:grid-cols-2 gap-4 mb-6">
+      {editorialSources.map(source => (
+        <a key={source.id} href={source.url} target="_blank" rel="noopener noreferrer" className="block p-4 border border-amber-700/60 rounded-lg hover:border-amber-400 transition-colors">
+          <div className="text-xs text-amber-300 mb-1">{source.publisher} · {source.published}</div>
+          <div className="text-gray-100 font-medium">{source.title}</div>
+          <div className="text-xs text-gray-400 mt-2">{source.scope}</div>
+        </a>
+      ))}
+    </div>
+    <h3 className="font-semibold text-gray-200 mb-3">Additional reading (not citations for every legacy figure)</h3>
     <div className="grid md:grid-cols-3 gap-4">
       {resources.map((resource, i) => (
         <a
@@ -1086,7 +1136,7 @@ const renderResources = () => (
       </div>
       <h2 className="text-3xl font-bold mb-2">In Memory</h2>
       <p className="text-gray-300 text-lg mb-4">
-        We remember the {totalDeaths} lives lost and {totalInjured} injured
+        We remember those who were killed, injured, and otherwise affected. The verified national toll remains an estimate; regional counts on this site are unverified.
       </p>
       <p className="text-gray-400 text-sm italic">
         "The arc of the moral universe is long, but it bends toward justice."
@@ -1101,6 +1151,7 @@ const renderResources = () => (
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-red-900 via-gray-900 to-black' : 'bg-gradient-to-br from-gray-100 via-white to-gray-200'} ${darkMode ? 'text-white' : 'text-gray-900'} p-8 relative`}>
       {renderHeader()}
+      {renderEvidenceNotice()}
       {renderContext()}
       {renderTimeline()}
       {renderTimelineSlider()}
@@ -1120,8 +1171,8 @@ const renderResources = () => (
       {renderCondolences()}
 
       <footer className={`text-center ${darkMode ? 'text-gray-500' : 'text-gray-600'} text-sm mt-12`}>
-        <p>Data compiled from various human rights organizations and news sources.</p>
-        <p className="mt-2">Last updated: August 2024</p>
+        <p>Source-backed timeline and national estimate reviewed {historicalEvidence.reviewedOn}. Regional statistics are unverified archival data.</p>
+        <p className="mt-2">Source methodology and known limitations are documented in the project README.</p>
         <p className="mt-4 text-xs">
           <button onClick={() => window.print()} className="hover:underline">Print this page</button> | 
           <button onClick={() => window.print()} className="hover:underline ml-2">Save as PDF</button>

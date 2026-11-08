@@ -9,6 +9,18 @@ const { chromium } = require('playwright');
     await page.goto('http://127.0.0.1:3000/', { waitUntil: 'domcontentloaded', timeout: 60000 });
     await page.getByRole('heading', { name: /The Monsoon Uprising/i }).waitFor({ timeout: 30000 });
     await page.getByRole('heading', { name: /Division-Wise Impact Map/i }).waitFor();
+    await page.getByRole('heading', { name: /Historical evidence and data limitations/i }).waitFor();
+    await page.getByText(/Unverified regional figures:/i).waitFor();
+    await page.getByText(/Up to 1,400/i).waitFor();
+    await page.getByTitle('Timeline').click();
+    await page.getByText('Muhammad Yunus sworn in as Chief Adviser').waitFor();
+    const timelinePanel = page.locator('.timeline-panel');
+    const referenced = timelinePanel.getByRole('link', { name: /Source: / });
+    if ((await referenced.count()) < 8) throw Error('Historical event source links missing');
+    if ((await timelinePanel.getByText(/casualties/i).count()) > 0) {
+      throw Error('Unverified daily casualty totals exposed in sourced timeline');
+    }
+    await page.getByTitle('Timeline').click();
     await page.locator('.rsm-geography').first().waitFor({ timeout: 120000 });
     const regionCount = await page.locator('.rsm-geography').count();
     if (regionCount < 8) throw Error('Expected interactive geographic regions; found ' + regionCount);

@@ -1085,21 +1085,18 @@ export default function BangladeshUprisingMap() {
      =================================== */
   const renderEvidenceNotice = () => (
     <section className="max-w-5xl mx-auto mb-8 rounded-xl border border-amber-500/50 bg-gray-900/85 p-5 md:p-6" aria-labelledby="evidence-heading">
-      <h2 id="evidence-heading" className="text-xl font-bold text-amber-200 mb-3">
-        Historical evidence and data limitations
-      </h2>
+      <h2 id="evidence-heading" className="text-xl font-bold text-amber-200 mb-3">{t("evidenceTitle")}</h2>
       <p className="text-sm text-gray-200 mb-3">
-        <strong>{historicalEvidence.nationalAssessment.qualifier} {historicalEvidence.nationalAssessment.value.toLocaleString("en-US")}</strong> people may have been killed during {historicalEvidence.nationalAssessment.period},
-        according to the UN Human Rights Office's 2025 fact-finding report. This is a <strong>national estimate</strong>, not a confirmed roll of named victims.
-        {" "}<a href={editorialSourceById["ohchr-2025"].url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">Read the OHCHR report</a>.
+        <strong>{t("upTo")} {number(historicalEvidence.nationalAssessment.value)}</strong> {t("peopleMayHaveDied")} {historicalEvidence.nationalAssessment.period}. {t("reportAttribution")} {t("estimateCaution")}
+        {" "}<a href={editorialSourceById["ohchr-2025"].url} target="_blank" rel="noopener noreferrer" className="underline text-amber-200 hover:text-white">{t("readOhchr")}</a>.
       </p>
       <p className="text-sm text-amber-100">
-        <strong>Unverified regional figures:</strong> {historicalEvidence.regionalAssessment.note}
-        The division figures and eye-injury cards below must not be combined with the OHCHR estimate.
+        <strong>{t("unverified")}</strong> {language === "bn"
+          ? "এই সাইটের পুরোনো বিভাগভিত্তিক নিহত, আহত ও চোখে আঘাতের পরিসংখ্যানের উৎস বা পদ্ধতি যাচাই করা যায়নি। এগুলো নির্ভরযোগ্য জাতীয় হিসাব নয়।"
+          : historicalEvidence.regionalAssessment.note}
+        {" "}{t("legacyWarning")}
       </p>
-      <p className="text-xs text-gray-400 mt-3">
-        Source review: {historicalEvidence.reviewedOn}. The sourced chronology uses linked references; older uncited daily casualty figures are excluded.
-      </p>
+      <p className="text-xs text-gray-400 mt-3">{t("sourceReview")} {historicalEvidence.reviewedOn}. {t("olderExcluded")}</p>
     </section>
   );
 
@@ -1108,8 +1105,8 @@ export default function BangladeshUprisingMap() {
      =================================== */
 const renderResources = () => (
   <div className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-8 max-w-5xl mx-auto mt-12">
-    <h2 className="text-2xl font-bold mb-4 text-red-400">Sources & Further Reading</h2>
-    <p className="text-sm text-gray-300 mb-4">Sources below support the selected chronology and national estimate. Other historical reading is listed separately.</p>
+    <h2 className="text-2xl font-bold mb-4 text-red-400">{t("resources")}</h2>
+    <p className="text-sm text-gray-300 mb-4">{t("resourcesNote")}</p>
     <div className="grid md:grid-cols-2 gap-4 mb-6">
       {editorialSources.map(source => (
         <a key={source.id} href={source.url} target="_blank" rel="noopener noreferrer" className="block p-4 border border-amber-700/60 rounded-lg hover:border-amber-400 transition-colors">
@@ -1119,7 +1116,7 @@ const renderResources = () => (
         </a>
       ))}
     </div>
-    <h3 className="font-semibold text-gray-200 mb-3">Additional reading (not citations for every legacy figure)</h3>
+    <h3 className="font-semibold text-gray-200 mb-3">{t("additionalReading")}</h3>
     <div className="grid md:grid-cols-3 gap-4">
       {resources.map((resource, i) => (
         <a
@@ -1149,9 +1146,9 @@ const renderResources = () => (
           <div key={i} className="candle-flame mx-2"></div>
         ))}
       </div>
-      <h2 className="text-3xl font-bold mb-2">In Memory</h2>
+      <h2 className="text-3xl font-bold mb-2">{t("memorial")}</h2>
       <p className="text-gray-300 text-lg mb-4">
-        We remember those who were killed, injured, and otherwise affected. The verified national toll remains an estimate; regional counts on this site are unverified.
+        {t("memorialText")}
       </p>
       <p className="text-gray-400 text-sm italic">
         "The arc of the moral universe is long, but it bends toward justice."
@@ -1189,11 +1186,11 @@ const renderResources = () => (
       </main>
 
       <footer className={`text-center ${darkMode ? 'text-gray-500' : 'text-gray-600'} text-sm mt-12`}>
-        <p>Source-backed timeline and national estimate reviewed {historicalEvidence.reviewedOn}. Regional statistics are unverified archival data.</p>
-        <p className="mt-2">Source methodology and known limitations are documented in the project README.</p>
+        <p>{t("sourceFooter")} {historicalEvidence.reviewedOn}. {t("footerWarning")}</p>
+        <p className="mt-2">{t("footerMethod")}</p>
         <p className="mt-4 text-xs">
-          <button onClick={() => window.print()} className="hover:underline">Print this page</button> | 
-          <button onClick={() => window.print()} className="hover:underline ml-2">Save as PDF</button>
+          <button onClick={() => window.print()} className="hover:underline">{t("print")}</button> | 
+          <button onClick={() => window.print()} className="hover:underline ml-2">{t("savePdf")}</button>
         </p>
       </footer>
     </div>

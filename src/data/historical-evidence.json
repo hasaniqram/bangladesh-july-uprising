@@ -1,0 +1,150 @@
+{
+  "reviewedOn": "2026-11-08",
+  "editorialNotice": "Sourced national findings are distinct from the older unsourced regional figures. Do not add them together or present the regional totals as an authoritative death toll.",
+  "sources": [
+    {
+      "id": "ohchr-2025",
+      "publisher": "UN Human Rights Office (OHCHR)",
+      "title": "Fact-finding report: Human rights violations and abuses related to the July–August 2024 protests",
+      "published": "2025-02-12",
+      "url": "https://www.ohchr.org/sites/default/files/documents/countries/bangladesh/ohchr-fftb-hr-violations-bd.pdf",
+      "scope": "National investigation of events from 1 July through 15 August 2024",
+      "methodology": "Independent fact-finding, including witness interviews and other evidence",
+      "kind": "fact-finding"
+    },
+    {
+      "id": "euaa-2025",
+      "publisher": "European Union Agency for Asylum",
+      "title": "Annex 1: Timeline of the protests in July–August 2024",
+      "published": "2025-08-01",
+      "url": "https://www.euaa.europa.eu/coi/bangladesh/2025/country-focus/coi-report-bangladesh-country-focus/annex-1-timeline-protests-july-august-2024",
+      "scope": "Overview of major events in July–August 2024",
+      "methodology": "Country-of-origin information report synthesizing attributed reporting",
+      "kind": "chronology"
+    },
+    {
+      "id": "amnesty-2024",
+      "publisher": "Amnesty International",
+      "title": "What is happening at the quota-reform protests in Bangladesh?",
+      "published": "2024-07-29",
+      "url": "https://www.amnesty.org/en/latest/news/2024/07/what-is-happening-at-the-quota-reform-protests-in-bangladesh/",
+      "scope": "Events in July 2024",
+      "methodology": "Human rights research and contemporaneous reporting",
+      "kind": "chronology"
+    },
+    {
+      "id": "reuters-2024",
+      "publisher": "Reuters",
+      "title": "Bangladesh Nobel laureate Muhammad Yunus takes charge of caretaker government",
+      "published": "2024-08-08",
+      "url": "https://www.reuters.com/world/asia-pacific/bangladesh-nobel-laureate-muhammad-yunus-takes-charge-caretaker-government-2024-08-08/",
+      "scope": "Interim government's swearing-in on 8 August 2024",
+      "methodology": "Contemporaneous news reporting",
+      "kind": "chronology"
+    }
+  ],
+  "nationalAssessment": {
+    "label": "Estimated protest-related deaths",
+    "qualifier": "Up to",
+    "value": 1400,
+    "period": "2024-07-15 to 2024-08-05",
+    "note": "OHCHR's 12 February 2025 report estimated that as many as 1,400 people may have been killed; this is an estimate, not a verified list of individuals and not the sum of the regional figures shown elsewhere on this page.",
+    "sourceIds": [
+      "ohchr-2025"
+    ],
+    "status": "estimate"
+  },
+  "regionalAssessment": {
+    "status": "unverified",
+    "scope": "Eight division-level figures retained from an older, uncited site dataset",
+    "note": "Region-level deaths, injuries, incident counts and age breakdowns have no traceable source or methodology in this repository. They are retained only as provisional legacy data, not verified statistics. Do not use for reporting or decision-making."
+  },
+  "timeline": [
+    {
+      "date": "2024-07-01",
+      "event": "Student-led quota reform protests begin",
+      "description": "University students organized demonstrations over the government's public-sector job quota system. The movement expanded throughout July.",
+      "type": "protest",
+      "sourceIds": [
+        "euaa-2025"
+      ]
+    },
+    {
+      "date": "2024-07-15",
+      "event": "Students attacked during demonstrations in Dhaka",
+      "description": "Amnesty International documented attacks on demonstrators at Dhaka University involving people believed to be members of the ruling party's student wing.",
+      "type": "violence",
+      "sourceIds": [
+        "amnesty-2024"
+      ]
+    },
+    {
+      "date": "2024-07-16",
+      "event": "Abu Sayed killed in Rangpur",
+      "description": "Protest coordinator Abu Sayed was shot and killed during demonstrations near Begum Rokeya University, a killing documented by human rights investigators.",
+      "type": "violence",
+      "sourceIds": [
+        "amnesty-2024",
+        "ohchr-2025"
+      ]
+    },
+    {
+      "date": "2024-07-18",
+      "event": "Nationwide internet shutdown",
+      "description": "Internet access was shut down nationwide amid expanding demonstrations and violence; limited services began returning on 23 July.",
+      "type": "media",
+      "sourceIds": [
+        "amnesty-2024",
+        "ohchr-2025"
+      ]
+    },
+    {
+      "date": "2024-07-19",
+      "event": "National curfew announced",
+      "description": "Authorities announced a nationwide curfew, effective around midnight, amid escalating unrest and the deployment of additional security forces.",
+      "type": "political",
+      "sourceIds": [
+        "ohchr-2025",
+        "euaa-2025"
+      ]
+    },
+    {
+      "date": "2024-07-21",
+      "event": "Supreme Court changes job-quota allocations",
+      "description": "The Supreme Court reduced the quota reserved for descendants of independence fighters to five percent; demonstrations continued amid calls for accountability.",
+      "type": "political",
+      "sourceIds": [
+        "ohchr-2025",
+        "euaa-2025"
+      ]
+    },
+    {
+      "date": "2024-08-01",
+      "event": "Protests regain momentum in early August",
+      "description": "Demonstrations expanded again during 1–3 August after a temporary lull following the quota decision.",
+      "type": "protest",
+      "sourceIds": [
+        "euaa-2025"
+      ]
+    },
+    {
+      "date": "2024-08-05",
+      "event": "Sheikh Hasina leaves Bangladesh",
+      "description": "Amid mass demonstrations, Sheikh Hasina resigned and left for India. The unrest culminated in a change of government.",
+      "type": "political",
+      "sourceIds": [
+        "euaa-2025",
+        "reuters-2024"
+      ]
+    },
+    {
+      "date": "2024-08-08",
+      "event": "Muhammad Yunus sworn in as Chief Adviser",
+      "description": "Nobel Peace Prize laureate Muhammad Yunus took the oath as head of the interim government, three days after Hasina's departure.",
+      "type": "political",
+      "sourceIds": [
+        "reuters-2024"
+      ]
+    }
+  ]
+}

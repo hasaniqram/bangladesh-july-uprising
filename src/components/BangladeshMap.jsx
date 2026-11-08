@@ -7,6 +7,8 @@ import { AlertCircle, Download, Share2, Search, X, BarChart3, Table, Info, Calen
 // Geographic boundaries are loaded on demand to keep the initial JS bundle smaller.
 import uprisingConfig from "../data/uprising-data.json";
 import historicalEvidence from "../data/historical-evidence.json";
+import { translate, formatLocalizedNumber } from "../i18n/messages";
+import { localizeEvent } from "../i18n/timeline-bn";
 import "./BangladeshUprisingMap.css";
 
 
@@ -77,6 +79,9 @@ export default function BangladeshUprisingMap() {
   const [animatedStats, setAnimatedStats] = useState({});
   const [darkMode, setDarkMode] = useState(true);
   const [language, setLanguage] = useState("en");
+  const t = (key) => translate(language, key);
+  const number = (value) => formatLocalizedNumber(value, language);
+  const localizedTimeline = timeline.map(event => localizeEvent(event, language));
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [compareMode, setCompareMode] = useState(false);
   const [selectedDivisions, setSelectedDivisions] = useState([]);
@@ -122,6 +127,11 @@ export default function BangladeshUprisingMap() {
 
     return () => controller.abort();
   }, [viewMode, divisionGeography]);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = language === "bn" ? "বাংলাদেশের জুলাই ২০২৪-এর গণঅভ্যুত্থান | স্মারক মানচিত্র" : "Bangladesh July 2024 Uprising | Memorial Map";
+  }, [language]);
 
   const activeRegion = pinnedRegion || hoveredRegion;
 
@@ -270,9 +280,9 @@ export default function BangladeshUprisingMap() {
       <div className="flex items-center gap-3">
         <AlertCircle className="w-8 h-8 text-red-500" />
         <div>
-          <h1 className="text-3xl font-bold">The Monsoon Uprising July 2024 Bangladesh</h1>
+          <h1 className="text-3xl font-bold">{t("title")}</h1>
           <p className="text-red-400 text-sm">
-            36 Days of July: Recording the Human Cost of Hasina's Crackdown
+            {t('tagline')}
           </p>
         </div>
       </div>
@@ -280,39 +290,39 @@ export default function BangladeshUprisingMap() {
         <button 
           onClick={() => setDarkMode(!darkMode)} 
           className="btn-icon" 
-          title={darkMode ? "Light Mode" : "Dark Mode"}
+          title={darkMode ? t("light") : t("dark")} aria-label={darkMode ? t("light") : t("dark")}
         >
           {darkMode ? "☀️" : "🌙"}
         </button>
         <button 
           onClick={toggleLanguage} 
           className="btn-icon" 
-          title="Switch Language"
+          title={t("language")} aria-label={language === "en" ? "Switch to Bengali" : "Switch to English"} aria-pressed={language === "bn"}
         >
-          {language === 'en' ? 'বাং' : 'EN'}
+          {language === "en" ? "বাংলা" : "English"}
         </button>
-        <button onClick={() => setShowGallery(true)} className="btn-icon" title="Gallery">
+        <button onClick={() => setShowGallery(true)} className="btn-icon" title={language === "en" ? "Gallery" : t("gallery")} aria-label={t("gallery")}>
           🖼️
         </button>
-        <button onClick={() => setShowProfiles(true)} className="btn-icon" title="Victim Profiles">
+        <button onClick={() => setShowProfiles(true)} className="btn-icon" title={language === "en" ? "Victim Profiles" : t("profiles")} aria-label={t("profiles")}>
           👥
         </button>
-        <button onClick={() => setShowCondolences(true)} className="btn-icon" title="Condolences">
+        <button onClick={() => setShowCondolences(true)} className="btn-icon" title={language === "en" ? "Condolences" : t("condolences")} aria-label={t("condolences")}>
           💐
         </button>
-        <button onClick={() => setShowContext(!showContext)} className="btn-icon" title="Context">
+        <button onClick={() => setShowContext(!showContext)} className="btn-icon" title={language === "en" ? "Context" : t("context")} aria-label={t("context")}>
           <Info size={20} />
         </button>
-        <button onClick={() => setShowTimeline(!showTimeline)} className="btn-icon" title="Timeline">
+        <button onClick={() => setShowTimeline(!showTimeline)} className="btn-icon" title={language === "en" ? "Timeline" : t("timeline")} aria-label={t("timeline")}>
           <Calendar size={20} />
         </button>
-        <button onClick={handleExport} className="btn-icon" title="Export CSV">
+        <button onClick={handleExport} className="btn-icon" title={language === "en" ? "Export CSV" : t("export")} aria-label={t("export")}>
           <Download size={20} />
         </button>
-        <button onClick={handleShare} className="btn-icon" title="Share">
+        <button onClick={handleShare} className="btn-icon" title={language === "en" ? "Share" : t("share")} aria-label={t("share")}>
           <Share2 size={20} />
         </button>
-        <button onClick={toggleFullscreen} className="btn-icon" title="Fullscreen">
+        <button onClick={toggleFullscreen} className="btn-icon" title={language === "en" ? "Fullscreen" : t("fullscreen")} aria-label={t("fullscreen")}>
           {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
         </button>
       </div>
@@ -1150,7 +1160,9 @@ const renderResources = () => (
      =================================== */
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-red-900 via-gray-900 to-black' : 'bg-gradient-to-br from-gray-100 via-white to-gray-200'} ${darkMode ? 'text-white' : 'text-gray-900'} p-8 relative`}>
+      <a href="#main-content" className="skip-link">{t("skip")}</a>
       {renderHeader()}
+      <main id="main-content" tabIndex={-1}>
       {renderEvidenceNotice()}
       {renderContext()}
       {renderTimeline()}
@@ -1169,6 +1181,7 @@ const renderResources = () => (
       {renderGallery()}
       {renderProfiles()}
       {renderCondolences()}
+      </main>
 
       <footer className={`text-center ${darkMode ? 'text-gray-500' : 'text-gray-600'} text-sm mt-12`}>
         <p>Source-backed timeline and national estimate reviewed {historicalEvidence.reviewedOn}. Regional statistics are unverified archival data.</p>

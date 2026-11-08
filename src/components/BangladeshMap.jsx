@@ -70,7 +70,6 @@ export default function BangladeshUprisingMap() {
      =================================== */
   const [hoveredRegion, setHoveredRegion] = useState(null);
   const [pinnedRegion, setPinnedRegion] = useState(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState("map");
   const [showTimeline, setShowTimeline] = useState(false);
@@ -161,17 +160,8 @@ export default function BangladeshUprisingMap() {
   /* ===================================
      EVENT HANDLERS
      =================================== */
-  const handleMouseMove = (e) => setTooltipPos({ x: e.pageX, y: e.pageY });
-
-  const handleRegionMouseEnter = (regionKey, e) => {
-    if (!pinnedRegion) {
-      setHoveredRegion(regionKey);
-      handleMouseMove(e);
-    }
-  };
-
-  const handleRegionMouseMove = (e) => {
-    if (!pinnedRegion) handleMouseMove(e);
+  const handleRegionMouseEnter = (regionKey) => {
+    if (!pinnedRegion) setHoveredRegion(regionKey);
   };
 
   const handleRegionMouseLeave = () => {
@@ -259,12 +249,6 @@ export default function BangladeshUprisingMap() {
   /* ===================================
      HELPER FUNCTIONS
      =================================== */
-  const calculateTooltipPosition = () => {
-    const leftPosition = tooltipPos.x - 320 < 0 ? tooltipPos.x + 20 : tooltipPos.x - 320;
-    const topPosition = tooltipPos.y - 180 < 0 ? tooltipPos.y + 20 : tooltipPos.y - 380;
-    return { left: leftPosition, top: topPosition };
-  };
-
   const filteredDivisions = Object.entries(uprisingData).filter(([key, data]) =>
     data.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -912,12 +896,11 @@ export default function BangladeshUprisingMap() {
         <Geography
           key={geo.rsmKey}
           geography={geo}
-          fill={adjustedColor}
+          fill={pinnedRegion === regionKey || isSelected ? "#fef3c7" : adjustedColor}
           fillOpacity={heatmapIntensity}
           stroke={isSelected ? "#ffd700" : MAP_CONFIG.strokeColor}
           strokeWidth={isSelected ? 2 : MAP_CONFIG.strokeWidth}
-          onMouseEnter={(e) => handleRegionMouseEnter(regionKey, e)}
-          onMouseMove={handleRegionMouseMove}
+          onMouseEnter={() => handleRegionMouseEnter(regionKey)}
           onMouseLeave={handleRegionMouseLeave}
           onClick={() => handleRegionClick(regionKey)}
           role="button"
@@ -974,34 +957,41 @@ export default function BangladeshUprisingMap() {
      RENDER: MAP COMPONENT
      =================================== */
   const renderMap = () => (
-    <div ref={mapRef} className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-8 max-w-5xl mx-auto relative">
-      <div className="flex justify-between items-center mb-2 flex-wrap gap-4 relative">
-  <h2 className="text-2xl font-bold absolute left-1/2 transform -translate-x-1/2">
-    {language === "bn" ? "বিভাগভিত্তিক প্রভাবের মানচিত্র" : "Division-Wise Impact Map"}
-  </h2>
-  <div className="flex items-center gap-4 ml-auto">
-    <div className="flex items-center gap-2">
-      <label htmlFor="map-intensity" className="text-sm text-gray-400">{language === "bn" ? "রঙের ঘনত্ব:" : "Heat Intensity:"}</label>
-      <input 
-        type="range" 
-        id="map-intensity"
-        min="0.3" 
-        max="1.5" 
-        step="0.1" 
-        value={heatmapIntensity}
-        onChange={(e) => setHeatmapIntensity(parseFloat(e.target.value))}
-        className="w-24"
-      />
-      <span className="text-xs text-gray-400">{(heatmapIntensity * 100).toFixed(0)}%</span>
-    </div>
-    {!showLegend && (
-      <button onClick={() => setShowLegend(true)} className="text-sm text-gray-400 hover:text-white">
-        Show Legend
-      </button>
-    )}
-  </div>
-</div>
-
+    <section ref={mapRef} aria-labelledby="map-heading" className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-4 md:p-8 max-w-5xl mx-auto relative">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+        <h2 className="text-xl md:text-2xl font-bold" id="map-heading">
+          {language === "bn" ? "বিভাগভিত্তিক প্রভাবের মানচিত্র" : "Division-Wise Impact Map"}
+        </h2>
+        <div className="flex items-center flex-wrap gap-3">
+          <label htmlFor="map-intensity" className="text-sm text-gray-300">
+            {language === "bn" ? "রঙের ঘনত্ব" : "Heat intensity"}
+          </label>
+          <input id="map-intensity" type="range" min="0.3" max="1.5" step="0.1"
+            value={heatmapIntensity} onChange={(event) => setHeatmapIntensity(Number(event.target.value))}
+            className="w-24" />
+          <span className="text-xs text-gray-300">{(heatmapIntensity * 100).toFixed(0)}%</span>
+          <button type="button" className="btn-view"
+            onClick={() => setShowLegend(value => !value)}
+            aria-expanded={showLegend} aria-controls="division-map-legend">
+            {language === "bn" ? (showLegend ? "রং নির্দেশিকা লুকান" : "রং নির্দেশিকা দেখুন") : (showLegend ? "Hide legend" : "Show legend")}
+          </button>
+        </div>
+      </div>
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <label htmlFor="map-division-picker" className="text-sm font-medium">
+          {language === "bn" ? "বিভাগ নির্বাচন করুন" : "Select division"}
+        </label>
+        <select id="map-division-picker" className="map-division-picker"
+          value={pinnedRegion || ""} onChange={(event) => {
+            setPinnedRegion(event.target.value || null);
+            setHoveredRegion(null);
+          }}>
+          <option value="">{language === "bn" ? "সব বিভাগ" : "All divisions"}</option>
+          {Object.entries(uprisingData).map(([key, value]) => (
+            <option key={key} value={key}>{value.name}</option>
+          ))}
+        </select>
+      </div>
       <p className="text-gray-400 text-center mb-8">
         {language === "bn"
           ? (compareMode ? "তুলনা করতে বিভাগ নির্বাচন করুন" : "বিস্তারিত জানতে বিভাগের ওপর কার্সর রাখুন, স্পর্শ করুন অথবা Tab ও Enter ব্যবহার করুন")
@@ -1026,7 +1016,8 @@ export default function BangladeshUprisingMap() {
           scale: MAP_CONFIG.scale, 
           center: MAP_CONFIG.center 
         }}
-        style={{ width: "100%", height: "auto", maxHeight: "min(75vh, 720px)" }}
+        className="memorial-map-svg"
+        style={{ width: "100%", height: "auto" }}
       >
         <Geographies geography={divisionGeography}>
           {renderGeographies}
@@ -1038,63 +1029,37 @@ export default function BangladeshUprisingMap() {
       <p className="sr-only" role="status" aria-live="polite">{pinnedRegion ? `${t("regionSelected")} ${uprisingData[pinnedRegion]?.name || ""}` : ""}</p>
       {renderLegend()}
       {renderTooltip()}
-    </div>
+    </section>
   );
 
 
   /* ===================================
      RENDER: TOOLTIP COMPONENT
      =================================== */
+  // Region details live below the map rather than at page mouse coordinates.
+  // This prevents overflow/off-screen content on touch devices and keyboard focus.
   const renderTooltip = () => {
     if (!activeRegion || compareMode) return null;
-
-    const tooltipPosition = calculateTooltipPosition();
     const data = uprisingData[activeRegion];
-
+    if (!data) return null;
     return (
-      <div
-        className="absolute bg-black bg-opacity-95 border-2 border-red-600 rounded-lg p-4 pointer-events-none z-20 min-w-64 shadow-2xl transition-all duration-100 ease-out transform opacity-100 scale-100 tooltip-container"
-        style={tooltipPosition}
-      >
-        {pinnedRegion && (
-          <button
-            className="absolute top-1 right-2 text-gray-400 hover:text-white text-xs pointer-events-auto"
-            onClick={handleTooltipClose}
-          >
-            ✕
-          </button>
-        )}
-        <h3 className="text-xl font-bold text-red-400 mb-2">
-          {data.name} Division
-        </h3>
-        <div className="space-y-1 text-sm">
-          <div className="flex justify-between gap-8">
-            <span className="text-gray-400">Deaths:</span>
-            <span className="text-red-400 font-bold text-lg">{data.deaths}</span>
-          </div>
-          <div className="flex justify-between gap-8">
-            <span className="text-gray-400">Injured:</span>
-            <span className="text-orange-400 font-bold text-lg">{data.injured}</span>
-          </div>
-          <div className="flex justify-between gap-8">
-            <span className="text-gray-400">% of Total Deaths:</span>
-            <span className="text-gray-300 font-bold">{getPercentage(data.deaths)}%</span>
-          </div>
-          <p className="text-gray-300 text-xs mt-2 pt-2 border-t border-gray-700">
-            {data.details}
-          </p>
-          {data.majorIncidents && data.majorIncidents.length > 0 && (
-            <div className="mt-3 pt-2 border-t border-gray-700">
-              <div className="text-gray-400 text-xs font-bold mb-1">Major Incidents:</div>
-              {data.majorIncidents.slice(0, 2).map((incident, i) => (
-                <div key={i} className="text-xs text-gray-400 mb-1">
-                  • {incident.date}: {incident.description}
-                </div>
-              ))}
-            </div>
+      <section className="map-region-details mt-4 bg-gray-950 border border-red-700 rounded-lg p-4 md:p-5"
+        aria-label={`${data.name} ${t("overview")}`}>
+        <div className="flex items-start justify-between gap-4">
+          <h3 className="text-xl font-bold text-red-300">{data.name} {t("division")}</h3>
+          {pinnedRegion && (
+            <button type="button" className="btn-view" onClick={handleTooltipClose} aria-label={t("close")}>
+              <X size={16} aria-hidden="true" /> {t("close")}
+            </button>
           )}
         </div>
-      </div>
+        <p className="text-xs text-amber-200 mt-1 mb-3">{t("unverified")} {t("legacyWarning")}</p>
+        <dl className="grid grid-cols-2 gap-3 text-sm">
+          <div><dt className="text-gray-300">{t("deaths")}</dt><dd className="text-red-300 font-bold">{number(data.deaths)}</dd></div>
+          <div><dt className="text-gray-300">{t("injured")}</dt><dd className="text-orange-300 font-bold">{number(data.injured)}</dd></div>
+        </dl>
+        {language === "en" && data.details && <p className="text-gray-300 text-sm mt-4">{data.details}</p>}
+      </section>
     );
   };
 

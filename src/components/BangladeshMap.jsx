@@ -346,17 +346,17 @@ export default function BangladeshUprisingMap() {
         <p className="text-gray-300 mb-4">{context.background}</p>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <h3 className="font-bold text-orange-400 mb-2">Duration</h3>
+            <h3 className="font-bold text-orange-400 mb-2">{t("duration")}</h3>
             <p className="text-sm text-gray-400">{context.duration}</p>
           </div>
           <div>
-            <h3 className="font-bold text-orange-400 mb-2">Outcome</h3>
+            <h3 className="font-bold text-orange-400 mb-2">{t("outcomes")}</h3>
             <p className="text-sm text-gray-400">{context.outcome}</p>
           </div>
         </div>
         {context.keyDemands && (
           <div className="mt-4">
-            <h3 className="font-bold text-orange-400 mb-2">Key Demands</h3>
+            <h3 className="font-bold text-orange-400 mb-2">{t("keyDemands")}</h3>
             <ul className="text-sm text-gray-400 space-y-1">
               {context.keyDemands.map((demand, i) => (
                 <li key={i}>• {demand}</li>
@@ -920,7 +920,21 @@ export default function BangladeshUprisingMap() {
           onMouseMove={handleRegionMouseMove}
           onMouseLeave={handleRegionMouseLeave}
           onClick={() => handleRegionClick(regionKey)}
-          style={{ outline: 'none', cursor: 'pointer', transition: 'fill 0.2s' }}
+          role="button"
+          tabIndex={0}
+          aria-label={`${divisionName}: ${t("overview")}`}
+          aria-pressed={isSelected || pinnedRegion === regionKey}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              handleRegionClick(regionKey);
+            }
+            if (event.key === "Escape") {
+              setPinnedRegion(null);
+              setHoveredRegion(null);
+            }
+          }}
+          style={{ cursor: 'pointer', transition: 'fill 0.2s' }}
         />
       );
     })
@@ -963,13 +977,14 @@ export default function BangladeshUprisingMap() {
     <div ref={mapRef} className="bg-gray-900 bg-opacity-50 backdrop-blur-sm border border-gray-700 rounded-lg p-8 max-w-5xl mx-auto relative">
       <div className="flex justify-between items-center mb-2 flex-wrap gap-4 relative">
   <h2 className="text-2xl font-bold absolute left-1/2 transform -translate-x-1/2">
-    Division-Wise Impact Map
+    {language === "bn" ? "বিভাগভিত্তিক প্রভাবের মানচিত্র" : "Division-Wise Impact Map"}
   </h2>
   <div className="flex items-center gap-4 ml-auto">
     <div className="flex items-center gap-2">
-      <label className="text-sm text-gray-400">Heat Intensity:</label>
+      <label htmlFor="map-intensity" className="text-sm text-gray-400">{language === "bn" ? "রঙের ঘনত্ব:" : "Heat Intensity:"}</label>
       <input 
         type="range" 
+        id="map-intensity"
         min="0.3" 
         max="1.5" 
         step="0.1" 
@@ -988,19 +1003,21 @@ export default function BangladeshUprisingMap() {
 </div>
 
       <p className="text-gray-400 text-center mb-8">
-        {compareMode ? "Click divisions to compare" : "Hover or tap regions to see details"}
+        {language === "bn"
+          ? (compareMode ? "তুলনা করতে বিভাগ নির্বাচন করুন" : "বিস্তারিত জানতে বিভাগের ওপর কার্সর রাখুন, স্পর্শ করুন অথবা Tab ও Enter ব্যবহার করুন")
+          : (compareMode ? "Click or press Enter on divisions to compare" : "Hover, tap, or use Tab and Enter to explore regions")}
       </p>
 
       {geographyError ? (
         <div role="alert" className="rounded-lg border border-red-500 p-6 text-center">
-          <p>Map boundaries could not be loaded. You can still explore the data in the table.</p>
+          <p>{t("mapError")} {t("tableFallback")}</p>
           <button className="btn-view mx-auto mt-4" onClick={() => setViewMode("table")}>
-            Open data table
+            {t("divisionTable")}
           </button>
         </div>
       ) : !divisionGeography ? (
         <div role="status" aria-live="polite" className="rounded-lg border border-gray-700 p-8 text-center">
-          Loading Bangladesh map boundaries…
+          {t("unknownRegions")}
         </div>
       ) : (
       <ComposableMap
@@ -1018,6 +1035,7 @@ export default function BangladeshUprisingMap() {
       </ComposableMap>
       )}
 
+      <p className="sr-only" role="status" aria-live="polite">{pinnedRegion ? `${t("regionSelected")} ${uprisingData[pinnedRegion]?.name || ""}` : ""}</p>
       {renderLegend()}
       {renderTooltip()}
     </div>
